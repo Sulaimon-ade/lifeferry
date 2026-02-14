@@ -4,7 +4,7 @@ import PublicLayout from '../../components/layouts/PublicLayout';
 import HeroCarousel from '../../components/HeroCarousel';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { supabase } from '../../lib/supabase';
-import { Calendar, BookOpen, ArrowRight, Users, Target, Lightbulb } from 'lucide-react';
+import { Calendar, BookOpen, ArrowRight, Users, Target, Heart } from 'lucide-react';
 
 interface PageSection {
   title: string;
@@ -106,58 +106,58 @@ export default function HomePage() {
     <PublicLayout>
       <HeroCarousel />
 
-      <section className="py-16 bg-white">
+      <section className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-teal-50/30 to-blue-50/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 md:mb-16">
             {sections.mission ? (
               <>
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">{sections.mission.title}</h2>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">{sections.mission.title}</h2>
                 <div
-                  className="text-lg text-gray-600 max-w-3xl mx-auto"
+                  className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: sections.mission.content }}
                 />
               </>
             ) : (
               <>
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Mission</h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">Our Mission</h2>
+                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                   Providing accessible, compassionate mental health support to empower individuals on their wellness journey.
                 </p>
               </>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <div className="text-center p-6">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-teal-100 rounded-full">
-                  <Target className="h-8 w-8 text-teal-600" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-teal-100/50">
+              <div className="flex justify-center mb-5">
+                <div className="p-3.5 bg-gradient-to-br from-teal-100 to-teal-200 rounded-full">
+                  <Target className="h-8 w-8 text-teal-700" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Compassionate Care</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 text-center">Compassionate Care</h3>
+              <p className="text-base text-gray-600 leading-relaxed text-center">
                 We approach every individual with empathy, understanding, and respect.
               </p>
             </div>
-            <div className="text-center p-6">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <Users className="h-8 w-8 text-blue-600" />
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50">
+              <div className="flex justify-center mb-5">
+                <div className="p-3.5 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full">
+                  <Users className="h-8 w-8 text-blue-700" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Accessible Support</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 text-center">Accessible Support</h3>
+              <p className="text-base text-gray-600 leading-relaxed text-center">
                 Mental health services should be available and welcoming to everyone.
               </p>
             </div>
-            <div className="text-center p-6">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-purple-100 rounded-full">
-                  <Lightbulb className="h-8 w-8 text-purple-600" />
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100/50">
+              <div className="flex justify-center mb-5">
+                <div className="p-3.5 bg-gradient-to-br from-rose-100 to-rose-200 rounded-full">
+                  <Heart className="h-8 w-8 text-rose-700" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Empowerment</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 text-center">Empowerment</h3>
+              <p className="text-base text-gray-600 leading-relaxed text-center">
                 We help people discover their inner strength and resilience.
               </p>
             </div>
@@ -166,39 +166,39 @@ export default function HomePage() {
       </section>
 
       {services.length > 0 && (
-        <section className="py-16 bg-gray-50">
+        <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-teal-50/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Services</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <div className="text-center mb-20">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">Our Services</h2>
+              <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Comprehensive mental health support tailored to your unique needs
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
               {services.map((service) => (
                 <Link
                   key={service.id}
                   to={`/services/${service.slug}`}
-                  className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all border border-gray-200 group"
+                  className="bg-white rounded-2xl p-8 lg:p-10 hover:shadow-2xl transition-all duration-300 border border-teal-100/30 hover:border-teal-200 hover:bg-teal-50/30 group"
                 >
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-teal-600 transition-colors leading-tight">
                     {service.title}
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{service.description}</p>
-                  <span className="text-teal-600 font-medium flex items-center group-hover:gap-2 transition-all">
-                    Learn More <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  <p className="text-lg text-gray-600 mb-6 line-clamp-3 leading-relaxed">{service.description}</p>
+                  <span className="text-teal-600 font-semibold flex items-center gap-2 group-hover:gap-3 transition-all">
+                    Learn More <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Link>
               ))}
             </div>
 
-            <div className="text-center mt-10">
+            <div className="text-center mt-16">
               <Link
                 to="/services"
-                className="inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors"
+                className="inline-flex items-center px-10 py-4 bg-teal-600 text-white text-lg rounded-xl font-semibold hover:bg-teal-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
-                View All Services <ArrowRight className="h-5 w-5 ml-2" />
+                View All Services <ArrowRight className="h-6 w-6 ml-2" />
               </Link>
             </div>
           </div>
@@ -206,150 +206,175 @@ export default function HomePage() {
       )}
 
       {events.length > 0 && (
-        <section className="py-16 bg-white">
+        <section className="py-24 lg:py-32 bg-gradient-to-b from-blue-50/20 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-12">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Upcoming Programs & Events</h2>
-                <p className="text-lg text-gray-600">Join us for workshops, support groups, and community events</p>
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
+              <div className="max-w-3xl">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">Upcoming Programs & Events</h2>
+                <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">Join us for workshops, support groups, and community events</p>
               </div>
               <Link
                 to="/programs"
-                className="hidden md:flex items-center text-teal-600 font-semibold hover:text-teal-700"
+                className="hidden md:inline-flex items-center text-teal-600 text-lg font-semibold hover:text-teal-700 hover:gap-3 gap-2 transition-all"
               >
-                View All <ArrowRight className="h-5 w-5 ml-1" />
+                View All <ArrowRight className="h-6 w-6" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
               {events.map((event) => (
                 <Link
                   key={event.id}
                   to={`/programs/${event.slug}`}
-                  className="bg-gray-50 rounded-xl p-6 hover:shadow-md transition-all border border-gray-200 group"
+                  className="bg-white rounded-2xl p-8 lg:p-10 hover:shadow-2xl transition-all duration-300 border border-blue-100/50 hover:border-blue-200 hover:bg-blue-50/20 group"
                 >
-                  <div className="flex items-center space-x-2 text-teal-600 mb-3">
-                    <Calendar className="h-5 w-5" />
-                    <span className="text-sm font-medium">
+                  <div className="flex items-center gap-3 text-teal-600 mb-6">
+                    <div className="p-2 bg-teal-100 rounded-lg">
+                      <Calendar className="h-5 w-5" />
+                    </div>
+                    <span className="text-base font-semibold">
                       {new Date(event.event_datetime).toLocaleDateString()}
                     </span>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-teal-600 transition-colors leading-tight">
                     {event.title}
                   </h3>
-                  <p className="text-gray-600 line-clamp-3">{event.description}</p>
+                  <p className="text-lg text-gray-600 line-clamp-3 leading-relaxed">{event.description}</p>
                 </Link>
               ))}
+            </div>
+
+            <div className="text-center mt-12 md:hidden">
+              <Link
+                to="/programs"
+                className="inline-flex items-center text-teal-600 text-lg font-semibold hover:text-teal-700 hover:gap-3 gap-2 transition-all"
+              >
+                View All Programs <ArrowRight className="h-6 w-6" />
+              </Link>
             </div>
           </div>
         </section>
       )}
 
       {posts.length > 0 && (
-        <section className="py-16 bg-gray-50">
+        <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-rose-50/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-12">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Latest from Our Blog</h2>
-                <p className="text-lg text-gray-600">Insights, tips, and stories about mental health</p>
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
+              <div className="max-w-3xl">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">Latest from Our Blog</h2>
+                <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">Insights, tips, and stories about mental health</p>
               </div>
               <Link
                 to="/blog"
-                className="hidden md:flex items-center text-teal-600 font-semibold hover:text-teal-700"
+                className="hidden md:inline-flex items-center text-teal-600 text-lg font-semibold hover:text-teal-700 hover:gap-3 gap-2 transition-all"
               >
-                View All <ArrowRight className="h-5 w-5 ml-1" />
+                View All <ArrowRight className="h-6 w-6" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
               {posts.map((post) => (
                 <Link
                   key={post.id}
                   to={`/blog/${post.slug}`}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-200 group"
+                  className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-rose-100/30 hover:border-rose-200 hover:bg-rose-50/20 group"
                 >
                   {post.cover_url && (
-                    <ResponsiveImage
-                      src={post.cover_url}
-                      alt={post.title}
-                      aspectRatio="video"
-                      containerClassName="rounded-t-xl"
-                      className="group-hover:scale-105 transition-transform duration-300"
-                    />
-                  )}
-                  <div className="p-6">
-                    <div className="flex items-center space-x-2 text-gray-500 text-sm mb-3">
-                      <BookOpen className="h-4 w-4" />
-                      <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                    <div className="overflow-hidden">
+                      <ResponsiveImage
+                        src={post.cover_url}
+                        alt={post.title}
+                        aspectRatio="video"
+                        containerClassName=""
+                        className="group-hover:scale-105 transition-transform duration-500"
+                      />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">
+                  )}
+                  <div className="p-8 lg:p-10">
+                    <div className="flex items-center gap-3 text-gray-500 mb-4">
+                      <div className="p-1.5 bg-rose-50 rounded-lg">
+                        <BookOpen className="h-4 w-4 text-rose-600" />
+                      </div>
+                      <span className="text-sm font-medium">{new Date(post.published_at).toLocaleDateString()}</span>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-teal-600 transition-colors leading-tight">
                       {post.title}
                     </h3>
-                    <p className="text-gray-600 line-clamp-3">{post.excerpt}</p>
+                    <p className="text-lg text-gray-600 line-clamp-3 leading-relaxed">{post.excerpt}</p>
                   </div>
                 </Link>
               ))}
+            </div>
+
+            <div className="text-center mt-12 md:hidden">
+              <Link
+                to="/blog"
+                className="inline-flex items-center text-teal-600 text-lg font-semibold hover:text-teal-700 hover:gap-3 gap-2 transition-all"
+              >
+                View All Posts <ArrowRight className="h-6 w-6" />
+              </Link>
             </div>
           </div>
         </section>
       )}
 
-      <section className="py-16 bg-teal-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">Stay Connected</h2>
-            <p className="text-teal-100 mb-8">
+      <section className="py-24 lg:py-32 bg-gradient-to-br from-teal-600 to-teal-700 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-transparent"></div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">Stay Connected</h2>
+            <p className="text-xl md:text-2xl text-teal-50 mb-12 leading-relaxed">
               Subscribe to our newsletter for mental health tips, event updates, and community news
             </p>
 
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4">
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-lg focus:ring-2 focus:ring-white focus:outline-none"
+                placeholder="Enter your email address"
+                className="flex-1 px-6 py-4 rounded-xl text-lg focus:ring-4 focus:ring-white/50 focus:outline-none shadow-lg"
                 disabled={subscribeStatus === 'loading'}
               />
               <button
                 type="submit"
                 disabled={subscribeStatus === 'loading'}
-                className="px-8 py-3 bg-white text-teal-600 rounded-lg font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
+                className="px-10 py-4 bg-white text-teal-600 rounded-xl text-lg font-bold hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50"
               >
                 {subscribeStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
               </button>
             </form>
 
             {subscribeStatus === 'success' && (
-              <p className="mt-4 text-white font-medium">Thank you for subscribing!</p>
+              <p className="mt-6 text-white text-lg font-semibold">Thank you for subscribing!</p>
             )}
             {subscribeStatus === 'exists' && (
-              <p className="mt-4 text-white font-medium">You're already subscribed!</p>
+              <p className="mt-6 text-white text-lg font-semibold">You're already subscribed!</p>
             )}
             {subscribeStatus === 'error' && (
-              <p className="mt-4 text-white font-medium">Something went wrong. Please try again.</p>
+              <p className="mt-6 text-white text-lg font-semibold">Something went wrong. Please try again.</p>
             )}
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-24 lg:py-32 bg-gradient-to-b from-teal-50/30 via-blue-50/20 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Ready to Start Your Journey?</h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">Ready to Start Your Journey?</h2>
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
             Take the first step towards better mental health. Our compassionate team is here to support you.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link
               to="/services"
-              className="px-8 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center px-10 py-4 bg-teal-600 text-white text-lg rounded-xl font-semibold hover:bg-teal-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
               Book a Session
             </Link>
             <Link
               to="/contact"
-              className="px-8 py-3 bg-white text-teal-600 border-2 border-teal-600 rounded-lg font-semibold hover:bg-teal-50 transition-colors"
+              className="inline-flex items-center justify-center px-10 py-4 bg-white text-teal-600 border-2 border-teal-600 text-lg rounded-xl font-semibold hover:bg-teal-50 transition-all shadow-sm hover:shadow-lg hover:-translate-y-0.5"
             >
               Contact Us
             </Link>
