@@ -162,7 +162,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 <h3 className="text-white font-semibold mb-3 text-center">Follow Us</h3>
                 <div className="flex items-center space-x-4">
                   <a
-                    href="https://instagram.com"
+                    href="https://www.instagram.com/lifeferryng"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
@@ -171,7 +171,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                     <Instagram className="h-5 w-5" />
                   </a>
                   <a
-                    href="https://youtube.com"
+                    href="https://www.youtube.com/@Joycethebeloved"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
@@ -180,7 +180,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                     <Youtube className="h-5 w-5" />
                   </a>
                   <a
-                    href="https://linkedin.com"
+                    href="https://www.linkedin.com/in/life-ferry-769918376/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
