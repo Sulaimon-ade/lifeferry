@@ -106,64 +106,86 @@ export default function HomePage() {
     <PublicLayout>
       <HeroCarousel />
 
-      <section className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-teal-50/30 to-blue-50/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
-            {sections.mission ? (
-              <>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">{sections.mission.title}</h2>
-                <div
-                  className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: sections.mission.content }}
-                />
-              </>
-            ) : (
-              <>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">Our Mission</h2>
-                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                  Providing accessible, compassionate mental health support to empower individuals on their wellness journey.
-                </p>
-              </>
-            )}
-          </div>
+      <section className="section-soft-gradient py-16 md:py-20 lg:py-24">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-5xl text-center">
+      <p className="inline-flex items-center gap-2 rounded-full bg-white/60 px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-black/5">
+        Lifeferry Mental Health Initiative
+      </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-teal-100/50">
-              <div className="flex justify-center mb-5">
-                <div className="p-3.5 bg-gradient-to-br from-teal-100 to-teal-200 rounded-full">
-                  <Target className="h-8 w-8 text-teal-700" />
-                </div>
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 text-center">Compassionate Care</h3>
-              <p className="text-base text-gray-600 leading-relaxed text-center">
-                We approach every individual with empathy, understanding, and respect.
-              </p>
-            </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-blue-100/50">
-              <div className="flex justify-center mb-5">
-                <div className="p-3.5 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full">
-                  <Users className="h-8 w-8 text-blue-700" />
-                </div>
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 text-center">Accessible Support</h3>
-              <p className="text-base text-gray-600 leading-relaxed text-center">
-                Mental health services should be available and welcoming to everyone.
-              </p>
-            </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100/50">
-              <div className="flex justify-center mb-5">
-                <div className="p-3.5 bg-gradient-to-br from-rose-100 to-rose-200 rounded-full">
-                  <Heart className="h-8 w-8 text-rose-700" />
-                </div>
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 text-center">Empowerment</h3>
-              <p className="text-base text-gray-600 leading-relaxed text-center">
-                We help people discover their inner strength and resilience.
-              </p>
+      <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+        {sections.mission?.title ?? "Our Mission"}
+      </h2>
+
+      <div className="mt-6 mx-auto max-w-4xl rounded-3xl glass-card p-6 md:p-10">
+        {sections.mission ? (
+          <div
+            className="text-lg md:text-xl text-gray-700 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: sections.mission.content }}
+          />
+        ) : (
+          <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+            Providing accessible, compassionate mental health support to empower individuals on their wellness journey.
+          </p>
+        )}
+      </div>
+    </div>
+
+    <div className="mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+      {/* Card 1 */}
+      <div className="glass-card rounded-3xl p-6 md:p-8 text-center hover:shadow-lg transition-all duration-300">
+        <div className="flex justify-center mb-5">
+          <div className="p-4 rounded-2xl bg-white/70 ring-1 ring-black/5">
+            <div className="p-3 rounded-full bg-gradient-to-br from-teal-100 to-teal-200">
+              <Target className="h-8 w-8 text-teal-700" />
             </div>
           </div>
         </div>
-      </section>
+        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+          Compassionate Care
+        </h3>
+        <p className="text-base text-gray-700 leading-relaxed">
+          We approach every individual with empathy, understanding, and respect.
+        </p>
+      </div>
+
+      {/* Card 2 */}
+      <div className="glass-card rounded-3xl p-6 md:p-8 text-center hover:shadow-lg transition-all duration-300">
+        <div className="flex justify-center mb-5">
+          <div className="p-4 rounded-2xl bg-white/70 ring-1 ring-black/5">
+            <div className="p-3 rounded-full bg-gradient-to-br from-blue-100 to-blue-200">
+              <Users className="h-8 w-8 text-blue-700" />
+            </div>
+          </div>
+        </div>
+        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+          Accessible Support
+        </h3>
+        <p className="text-base text-gray-700 leading-relaxed">
+          Mental health services should be available and welcoming to everyone.
+        </p>
+      </div>
+
+      {/* Card 3 */}
+      <div className="glass-card rounded-3xl p-6 md:p-8 text-center hover:shadow-lg transition-all duration-300">
+        <div className="flex justify-center mb-5">
+          <div className="p-4 rounded-2xl bg-white/70 ring-1 ring-black/5">
+            <div className="p-3 rounded-full bg-gradient-to-br from-rose-100 to-rose-200">
+              <Heart className="h-8 w-8 text-rose-700" />
+            </div>
+          </div>
+        </div>
+        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+          Empowerment
+        </h3>
+        <p className="text-base text-gray-700 leading-relaxed">
+          We help people discover their inner strength and resilience.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {services.length > 0 && (
         <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-teal-50/20">
