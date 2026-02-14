@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2, Download, ArrowLeft, FileText } from 'lucide-react';
 
 interface Resource {
@@ -135,10 +136,10 @@ export default function ResourceDetailPage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {resource.cover_url && (
-          <img
+          <ResponsiveImage
             src={resource.cover_url}
             alt={resource.title}
-            className="w-full h-96 object-cover rounded-lg shadow-lg mb-12"
+            containerClassName="w-full h-64 sm:h-80 md:h-96 rounded-lg shadow-lg mb-12"
           />
         )}
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2, Calendar, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -115,13 +116,13 @@ export default function BlogPage() {
                   className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
                 >
                   {post.cover_url ? (
-                    <img
+                    <ResponsiveImage
                       src={post.cover_url}
                       alt={post.title}
-                      className="w-full h-48 object-cover"
+                      containerClassName="w-full h-48 rounded-t-lg"
                     />
                   ) : (
-                    <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500" />
+                    <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500 rounded-t-lg" />
                   )}
 
                   <div className="p-6">

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PublicLayout from '../../components/layouts/PublicLayout';
 import HeroCarousel from '../../components/HeroCarousel';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { supabase } from '../../lib/supabase';
 import { Calendar, BookOpen, ArrowRight, Users, Target, Lightbulb } from 'lucide-react';
 
@@ -268,13 +269,13 @@ export default function HomePage() {
                   className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-200 group"
                 >
                   {post.cover_url && (
-                    <div className="aspect-video bg-gray-200 overflow-hidden">
-                      <img
-                        src={post.cover_url}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
+                    <ResponsiveImage
+                      src={post.cover_url}
+                      alt={post.title}
+                      aspectRatio="video"
+                      containerClassName="rounded-t-xl"
+                      className="group-hover:scale-105 transition-transform duration-300"
+                    />
                   )}
                   <div className="p-6">
                     <div className="flex items-center space-x-2 text-gray-500 text-sm mb-3">

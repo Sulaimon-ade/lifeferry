@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2, Calendar, User, ArrowLeft, Tag } from 'lucide-react';
 
 interface BlogPost {
@@ -133,10 +134,10 @@ export default function BlogPostPage() {
 
         {post.cover_url && (
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-            <img
+            <ResponsiveImage
               src={post.cover_url}
               alt={post.title}
-              className="w-full h-96 object-cover rounded-lg shadow-lg"
+              containerClassName="w-full h-64 sm:h-80 md:h-96 rounded-lg shadow-lg"
             />
           </div>
         )}

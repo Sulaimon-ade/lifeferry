@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2, Search, Download, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -140,13 +141,13 @@ export default function ResourcesPage() {
                 className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
               >
                 {resource.cover_url ? (
-                  <img
+                  <ResponsiveImage
                     src={resource.cover_url}
                     alt={resource.title}
-                    className="w-full h-48 object-cover"
+                    containerClassName="w-full h-48 rounded-t-lg"
                   />
                 ) : (
-                  <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
+                  <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center rounded-t-lg">
                     <FileText className="h-16 w-16 text-white opacity-50" />
                   </div>
                 )}

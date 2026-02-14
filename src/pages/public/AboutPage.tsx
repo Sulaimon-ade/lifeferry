@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2 } from 'lucide-react';
 
 interface PageSection {
@@ -117,10 +118,10 @@ export default function AboutPage() {
                       />
                     </div>
                     <div className={`order-2 ${imageOnLeft ? 'lg:order-1' : 'lg:order-2'}`}>
-                      <img
+                      <ResponsiveImage
                         src={section.image_url}
                         alt={section.title}
-                        className="w-full h-48 sm:h-64 lg:h-auto rounded-lg shadow-lg object-cover"
+                        containerClassName="w-full h-64 lg:h-96 rounded-lg shadow-lg"
                       />
                     </div>
                   </div>

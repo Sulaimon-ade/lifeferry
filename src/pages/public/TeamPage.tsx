@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2, Linkedin, Twitter, Mail } from 'lucide-react';
 
 interface TeamMember {
@@ -118,13 +119,14 @@ export default function TeamPage() {
                         className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                       >
                         {member.photo_url ? (
-                          <img
+                          <ResponsiveImage
                             src={member.photo_url}
                             alt={member.name}
-                            className="w-full h-64 object-cover"
+                            aspectRatio="portrait"
+                            containerClassName="w-full rounded-t-lg"
                           />
                         ) : (
-                          <div className="w-full h-64 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
+                          <div className="w-full h-64 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center rounded-t-lg">
                             <span className="text-5xl font-bold text-white">
                               {member.name.charAt(0)}
                             </span>

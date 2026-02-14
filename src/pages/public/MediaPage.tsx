@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2, Image as ImageIcon, Video, X } from 'lucide-react';
 
 interface MediaItem {
@@ -140,12 +141,13 @@ export default function MediaPage() {
               <button
                 key={item.id}
                 onClick={() => handleMediaClick(item)}
-                className="relative group aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 bg-gray-200"
+                className="relative group overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300"
               >
-                <img
+                <ResponsiveImage
                   src={item.thumbnail_url || item.url}
                   alt={item.title || 'Media item'}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  aspectRatio="square"
+                  className="group-hover:scale-110 transition-transform duration-300"
                 />
 
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
