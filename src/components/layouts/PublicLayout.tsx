@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Instagram, Youtube, Linkedin } from 'lucide-react';
 import { useState } from 'react';
 
 interface PublicLayoutProps {
@@ -83,7 +83,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
 
       <footer className="bg-gray-900 text-gray-300 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
                 <img
@@ -101,63 +101,100 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
               </p>
             </div>
 
-            <div>
-              <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link to="/about" className="text-sm hover:text-teal-400 transition-colors">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services" className="text-sm hover:text-teal-400 transition-colors">
-                    Services
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/programs" className="text-sm hover:text-teal-400 transition-colors">
-                    Programs & Events
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/partner" className="text-sm hover:text-teal-400 transition-colors">
-                    Partner With Us
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-8 col-span-1 md:col-span-2">
+              <div>
+                <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link to="/about" className="text-sm hover:text-teal-400 transition-colors">
+                      About Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/services" className="text-sm hover:text-teal-400 transition-colors">
+                      Services
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/programs" className="text-sm hover:text-teal-400 transition-colors">
+                      Programs & Events
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/partner" className="text-sm hover:text-teal-400 transition-colors">
+                      Partner With Us
+                    </Link>
+                  </li>
+                </ul>
+              </div>
 
-            <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link to="/faq" className="text-sm hover:text-teal-400 transition-colors">
-                    FAQ
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/privacy" className="text-sm hover:text-teal-400 transition-colors">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/terms" className="text-sm hover:text-teal-400 transition-colors">
-                    Terms of Use
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/disclaimer" className="text-sm hover:text-teal-400 transition-colors">
-                    Mental Health Disclaimer
-                  </Link>
-                </li>
-              </ul>
+              <div>
+                <h3 className="text-white font-semibold mb-4">Legal</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link to="/faq" className="text-sm hover:text-teal-400 transition-colors">
+                      FAQ
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/privacy" className="text-sm hover:text-teal-400 transition-colors">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/terms" className="text-sm hover:text-teal-400 transition-colors">
+                      Terms of Use
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/disclaimer" className="text-sm hover:text-teal-400 transition-colors">
+                      Mental Health Disclaimer
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-            <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} Lifeferry Mental Health Initiative. All rights reserved.
-            </p>
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex flex-col items-center space-y-4">
+              <div>
+                <h3 className="text-white font-semibold mb-3 text-center">Follow Us</h3>
+                <div className="flex items-center space-x-4">
+                  <a
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="https://youtube.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
+                    aria-label="YouTube"
+                  >
+                    <Youtube className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </a>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-400 text-center">
+                © {new Date().getFullYear()} Lifeferry Mental Health Initiative. All rights reserved.
+              </p>
+            </div>
           </div>
         </div>
       </footer>
