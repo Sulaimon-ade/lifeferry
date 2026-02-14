@@ -109,10 +109,6 @@ export default function HomePage() {
       <section className="section-soft-gradient py-16 md:py-20 lg:py-24">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="mx-auto max-w-5xl text-center">
-      <p className="inline-flex items-center gap-2 rounded-full bg-white/60 px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-black/5">
-        Lifeferry Mental Health Initiative
-      </p>
-
       <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
         {sections.mission?.title ?? "Our Mission"}
       </h2>
