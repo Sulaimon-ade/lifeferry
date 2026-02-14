@@ -143,11 +143,10 @@ export default function BlogPostPage() {
         )}
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="prose prose-lg prose-teal max-w-none">
-            <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {post.content}
-            </div>
-          </div>
+          <div
+            className="prose prose-lg prose-teal max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
