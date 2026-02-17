@@ -20,7 +20,7 @@ interface Slide {
 const slides: Slide[] = [
   {
     id: 1,
-    image: 'https://images.pexels.com/photos/3759657/pexels-photo-3759657.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: 'https://i.pinimg.com/1200x/6c/83/09/6c83098252234bf0127c6079dd96838e.jpg',
     title: 'Individual Therapy & Counseling',
     subtitle: 'Your partner through life\'s cruise',
     description: 'Professional one-on-one support tailored to your unique mental health journey',
@@ -29,7 +29,7 @@ const slides: Slide[] = [
   },
   {
     id: 2,
-    image: 'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: 'https://i.pinimg.com/736x/78/28/d0/7828d06c688ff79573acac2747afb0ba.jpg',
     title: 'Women\'s Mental Health Support',
     subtitle: 'Empowering women through every stage',
     description: 'Specialized care for the unique mental health challenges women face',
@@ -38,7 +38,7 @@ const slides: Slide[] = [
   },
   {
     id: 3,
-    image: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: 'https://i.pinimg.com/736x/d1/70/9a/d1709a3f13641000cfdd81ba8d042a83.jpg',
     title: 'Group Therapy & Support',
     subtitle: 'Healing together, growing stronger',
     description: 'Connect with others on similar journeys in a safe, supportive environment',
