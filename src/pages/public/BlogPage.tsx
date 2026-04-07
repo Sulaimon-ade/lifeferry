@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
 import ResponsiveImage from '../../components/ResponsiveImage';
@@ -16,13 +16,11 @@ interface BlogPost {
   published_at: string;
 }
 
-const POSTS_PER_PAGE = 9;
-
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchBlogPosts();
@@ -46,23 +44,17 @@ export default function BlogPage() {
     }
   };
 
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-  const endIndex = startIndex + POSTS_PER_PAGE;
-  const currentPosts = posts.slice(startIndex, endIndex);
+  const scroll = (dir: 'left' | 'right') => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({ left: dir === 'left' ? -380 : 380, behavior: 'smooth' });
+  };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (loading) {
@@ -108,21 +100,46 @@ export default function BlogPage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {currentPosts.map((post) => (
+            <div className="flex justify-end gap-3 mb-6">
+              <button
+                onClick={() => scroll('left')}
+                className="p-2.5 rounded-full border border-gray-200 bg-white hover:bg-teal-50 hover:border-teal-300 transition-colors shadow-sm"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="h-5 w-5 text-gray-600" />
+              </button>
+              <button
+                onClick={() => scroll('right')}
+                className="p-2.5 rounded-full border border-gray-200 bg-white hover:bg-teal-50 hover:border-teal-300 transition-colors shadow-sm"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
+
+            <div
+              ref={scrollRef}
+              className="flex gap-6 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {posts.map((post) => (
                 <Link
                   key={post.id}
                   to={`/blog/${post.slug}`}
-                  className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                  className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group flex-none w-[300px] md:w-[360px] snap-start"
                 >
                   {post.cover_url ? (
-                    <ResponsiveImage
-                      src={post.cover_url}
-                      alt={post.title}
-                      containerClassName="w-full h-48 rounded-t-lg"
-                    />
+                    <div className="overflow-hidden">
+                      <ResponsiveImage
+                        src={post.cover_url}
+                        alt={post.title}
+                        aspectRatio="video"
+                        containerClassName=""
+                        className="group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
                   ) : (
-                    <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500 rounded-t-lg" />
+                    <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500" />
                   )}
 
                   <div className="p-6">
@@ -134,16 +151,16 @@ export default function BlogPage() {
                       {post.excerpt}
                     </p>
 
-                    <div className="space-y-2 text-sm text-gray-500 mb-4">
+                    <div className="space-y-1.5 text-sm text-gray-500 mb-4">
                       {post.author_name && (
-                        <div className="flex items-center">
-                          <User className="h-4 w-4 mr-2 text-teal-600" />
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-teal-600 shrink-0" />
                           <span>{post.author_name}</span>
                         </div>
                       )}
                       {post.published_at && (
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-2 text-teal-600" />
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-teal-600 shrink-0" />
                           <span>{formatDate(post.published_at)}</span>
                         </div>
                       )}
@@ -165,51 +182,13 @@ export default function BlogPage() {
                 </Link>
               ))}
             </div>
-
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-2">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  aria-label="Previous page"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      currentPage === page
-                        ? 'bg-teal-600 text-white'
-                        : 'bg-white text-gray-700 hover:bg-teal-50 border border-gray-300'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  aria-label="Next page"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </div>
-            )}
           </>
         )}
       </div>
 
       <div className="bg-teal-50 mt-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Stay Informed
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Stay Informed</h2>
           <p className="text-gray-600 mb-6">
             Subscribe to our newsletter to receive updates and new blog posts.
           </p>
