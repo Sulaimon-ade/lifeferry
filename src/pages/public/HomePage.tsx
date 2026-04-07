@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PublicLayout from '../../components/layouts/PublicLayout';
 import HeroCarousel from '../../components/HeroCarousel';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { supabase } from '../../lib/supabase';
-import { Calendar, BookOpen, ArrowRight, Users, Target, Heart } from 'lucide-react';
+import { Calendar, BookOpen, ArrowRight, Users, Target, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PageSection {
   title: string;
@@ -33,6 +33,94 @@ interface BlogPost {
   excerpt: string;
   cover_url: string;
   published_at: string;
+}
+
+function BlogSlider({ posts }: { posts: BlogPost[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: 'left' | 'right') => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({ left: dir === 'left' ? -340 : 340, behavior: 'smooth' });
+  };
+
+  return (
+    <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-rose-50/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-end justify-between mb-12 gap-6">
+          <div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">Latest from Our Blog</h2>
+            <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">Insights, tips, and stories about mental health</p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <button
+              onClick={() => scroll('left')}
+              className="p-2.5 rounded-full border border-gray-200 bg-white hover:bg-teal-50 hover:border-teal-300 transition-colors shadow-sm"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="h-5 w-5 text-gray-600" />
+            </button>
+            <button
+              onClick={() => scroll('right')}
+              className="p-2.5 rounded-full border border-gray-200 bg-white hover:bg-teal-50 hover:border-teal-300 transition-colors shadow-sm"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="h-5 w-5 text-gray-600" />
+            </button>
+            <Link
+              to="/blog"
+              className="hidden md:inline-flex items-center gap-2 text-teal-600 text-base font-semibold hover:gap-3 transition-all"
+            >
+              View All <ArrowRight className="h-5 w-5" />
+            </Link>
+          </div>
+        </div>
+
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {posts.map((post) => (
+            <Link
+              key={post.id}
+              to={`/blog/${post.slug}`}
+              className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-rose-100/30 hover:border-rose-200 group flex-none w-[300px] md:w-[360px] snap-start"
+            >
+              {post.cover_url && (
+                <div className="overflow-hidden">
+                  <ResponsiveImage
+                    src={post.cover_url}
+                    alt={post.title}
+                    aspectRatio="video"
+                    containerClassName=""
+                    className="group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              )}
+              <div className="p-6">
+                <div className="flex items-center gap-2 text-gray-500 mb-3">
+                  <div className="p-1.5 bg-rose-50 rounded-lg">
+                    <BookOpen className="h-4 w-4 text-rose-600" />
+                  </div>
+                  <span className="text-sm font-medium">{new Date(post.published_at).toLocaleDateString()}</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors leading-tight line-clamp-2">
+                  {post.title}
+                </h3>
+                <p className="text-base text-gray-600 line-clamp-3 leading-relaxed">{post.excerpt}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="text-center mt-8 md:hidden">
+          <Link to="/blog" className="inline-flex items-center gap-2 text-teal-600 text-lg font-semibold">
+            View All Posts <ArrowRight className="h-5 w-5" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function HomePage() {
@@ -275,65 +363,7 @@ export default function HomePage() {
       )}
 
       {posts.length > 0 && (
-        <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-rose-50/20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
-              <div className="max-w-3xl">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">Latest from Our Blog</h2>
-                <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">Insights, tips, and stories about mental health</p>
-              </div>
-              <Link
-                to="/blog"
-                className="hidden md:inline-flex items-center text-teal-600 text-lg font-semibold hover:text-teal-700 hover:gap-3 gap-2 transition-all"
-              >
-                View All <ArrowRight className="h-6 w-6" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
-              {posts.map((post) => (
-                <Link
-                  key={post.id}
-                  to={`/blog/${post.slug}`}
-                  className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-rose-100/30 hover:border-rose-200 hover:bg-rose-50/20 group"
-                >
-                  {post.cover_url && (
-                    <div className="overflow-hidden">
-                      <ResponsiveImage
-                        src={post.cover_url}
-                        alt={post.title}
-                        aspectRatio="video"
-                        containerClassName=""
-                        className="group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  )}
-                  <div className="p-8 lg:p-10">
-                    <div className="flex items-center gap-3 text-gray-500 mb-4">
-                      <div className="p-1.5 bg-rose-50 rounded-lg">
-                        <BookOpen className="h-4 w-4 text-rose-600" />
-                      </div>
-                      <span className="text-sm font-medium">{new Date(post.published_at).toLocaleDateString()}</span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-teal-600 transition-colors leading-tight">
-                      {post.title}
-                    </h3>
-                    <p className="text-lg text-gray-600 line-clamp-3 leading-relaxed">{post.excerpt}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-
-            <div className="text-center mt-12 md:hidden">
-              <Link
-                to="/blog"
-                className="inline-flex items-center text-teal-600 text-lg font-semibold hover:text-teal-700 hover:gap-3 gap-2 transition-all"
-              >
-                View All Posts <ArrowRight className="h-6 w-6" />
-              </Link>
-            </div>
-          </div>
-        </section>
+        <BlogSlider posts={posts} />
       )}
 
       <section className="py-24 lg:py-32 bg-gradient-to-br from-teal-600 to-teal-700 relative overflow-hidden">
