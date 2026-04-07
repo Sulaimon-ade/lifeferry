@@ -1,26 +1,132 @@
-import { Link } from 'react-router-dom';
-import { Menu, X, Instagram, Youtube, Linkedin } from 'lucide-react';
-import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, Instagram, Youtube, Linkedin, ChevronDown } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 
 interface PublicLayoutProps {
   children: React.ReactNode;
 }
 
+interface DropdownItem {
+  name: string;
+  href: string;
+}
+
+interface NavItem {
+  name: string;
+  href?: string;
+  children?: DropdownItem[];
+}
+
+const navigation: NavItem[] = [
+  { name: 'Home', href: '/' },
+  {
+    name: 'About',
+    children: [
+      { name: 'About Us', href: '/about' },
+      { name: 'Services', href: '/services' },
+      { name: 'Our Team', href: '/team' },
+      { name: 'Partner With Us', href: '/partner' },
+      { name: 'Contact', href: '/contact' },
+    ],
+  },
+  { name: 'Blog', href: '/blog' },
+  {
+    name: 'Resources',
+    children: [
+      { name: 'Resources & Guides', href: '/resources' },
+      { name: 'Programs & Events', href: '/programs' },
+      { name: 'Media', href: '/media' },
+    ],
+  },
+];
+
+function DropdownMenu({ item, onClose }: { item: NavItem; onClose: () => void }) {
+  const location = useLocation();
+
+  return (
+    <div className="absolute top-full left-0 mt-1 w-52 bg-white rounded-xl shadow-lg border border-gray-100 py-1.5 z-50">
+      {item.children!.map((child) => (
+        <Link
+          key={child.href}
+          to={child.href}
+          onClick={onClose}
+          className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
+            location.pathname === child.href
+              ? 'text-teal-600 bg-teal-50'
+              : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
+          }`}
+        >
+          {child.name}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function NavItemDesktop({ item }: { item: NavItem }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  const isActive =
+    item.href === location.pathname ||
+    item.children?.some((c) => c.href === location.pathname);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  if (item.href) {
+    return (
+      <Link
+        to={item.href}
+        className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+          isActive
+            ? 'text-teal-600 bg-teal-50'
+            : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
+        }`}
+      >
+        {item.name}
+      </Link>
+    );
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+          isActive
+            ? 'text-teal-600 bg-teal-50'
+            : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
+        }`}
+      >
+        {item.name}
+        <ChevronDown
+          className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {open && <DropdownMenu item={item} onClose={() => setOpen(false)} />}
+    </div>
+  );
+}
+
 export default function PublicLayout({ children }: PublicLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const location = useLocation();
 
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Team', href: '/team' },
-    { name: 'Services', href: '/services' },
-    { name: 'Programs & Events', href: '/programs' },
-    { name: 'Resources', href: '/resources' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Partner With Us', href: '/partner' },
-    { name: 'Media', href: '/media' },
-    { name: 'Contact', href: '/contact' },
-  ];
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setMobileExpanded(null);
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50">
@@ -39,15 +145,10 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
               </div>
             </Link>
 
-            <div className="hidden lg:flex space-x-1">
+            {/* Desktop nav */}
+            <div className="hidden lg:flex items-center space-x-1">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-md transition-colors"
-                >
-                  {item.name}
-                </Link>
+                <NavItemDesktop key={item.name} item={item} />
               ))}
             </div>
 
@@ -61,19 +162,59 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
           </div>
         </nav>
 
+        {/* Mobile nav */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 bg-white">
             <div className="px-4 py-3 space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-md"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navigation.map((item) => {
+                if (item.href) {
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className={`block px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                        location.pathname === item.href
+                          ? 'text-teal-600 bg-teal-50'
+                          : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                }
+
+                const isExpanded = mobileExpanded === item.name;
+                return (
+                  <div key={item.name}>
+                    <button
+                      onClick={() => setMobileExpanded(isExpanded ? null : item.name)}
+                      className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-md transition-colors"
+                    >
+                      {item.name}
+                      <ChevronDown
+                        className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                    {isExpanded && (
+                      <div className="ml-4 mt-1 space-y-1 border-l-2 border-teal-100 pl-3">
+                        {item.children!.map((child) => (
+                          <Link
+                            key={child.href}
+                            to={child.href}
+                            className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                              location.pathname === child.href
+                                ? 'text-teal-600 bg-teal-50'
+                                : 'text-gray-600 hover:text-teal-600 hover:bg-teal-50'
+                            }`}
+                          >
+                            {child.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -103,64 +244,33 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
 
             <div className="grid grid-cols-2 md:grid-cols-2 gap-8 col-span-1 md:col-span-2">
               <div>
-                <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+                <h3 className="text-white font-semibold mb-4">About</h3>
                 <ul className="space-y-2">
-                  <li>
-                    <Link to="/about" className="text-sm hover:text-teal-400 transition-colors">
-                      About Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/services" className="text-sm hover:text-teal-400 transition-colors">
-                      Services
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/programs" className="text-sm hover:text-teal-400 transition-colors">
-                      Programs & Events
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/partner" className="text-sm hover:text-teal-400 transition-colors">
-                      Partner With Us
-                    </Link>
-                  </li>
+                  <li><Link to="/about" className="text-sm hover:text-teal-400 transition-colors">About Us</Link></li>
+                  <li><Link to="/services" className="text-sm hover:text-teal-400 transition-colors">Services</Link></li>
+                  <li><Link to="/team" className="text-sm hover:text-teal-400 transition-colors">Our Team</Link></li>
+                  <li><Link to="/partner" className="text-sm hover:text-teal-400 transition-colors">Partner With Us</Link></li>
+                  <li><Link to="/contact" className="text-sm hover:text-teal-400 transition-colors">Contact</Link></li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="text-white font-semibold mb-4">Legal</h3>
+                <h3 className="text-white font-semibold mb-4">Resources</h3>
                 <ul className="space-y-2">
-                  <li>
-                    <Link to="/faq" className="text-sm hover:text-teal-400 transition-colors">
-                      FAQ
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/privacy" className="text-sm hover:text-teal-400 transition-colors">
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/terms" className="text-sm hover:text-teal-400 transition-colors">
-                      Terms of Use
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/disclaimer" className="text-sm hover:text-teal-400 transition-colors">
-                      Mental Health Disclaimer
-                    </Link>
-                  </li>
+                  <li><Link to="/resources" className="text-sm hover:text-teal-400 transition-colors">Resources & Guides</Link></li>
+                  <li><Link to="/programs" className="text-sm hover:text-teal-400 transition-colors">Programs & Events</Link></li>
+                  <li><Link to="/media" className="text-sm hover:text-teal-400 transition-colors">Media</Link></li>
+                  <li><Link to="/blog" className="text-sm hover:text-teal-400 transition-colors">Blog</Link></li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col items-center space-y-4">
-              <div>
-                <h3 className="text-white font-semibold mb-3 text-center">Follow Us</h3>
-                <div className="flex items-center space-x-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="text-white text-sm font-semibold">Follow Us</span>
+                <div className="flex items-center space-x-3">
                   <a
                     href="https://www.instagram.com/lifeferryng"
                     target="_blank"
@@ -191,10 +301,17 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 </div>
               </div>
 
-              <p className="text-sm text-gray-400 text-center">
-                © {new Date().getFullYear()} Lifeferry Mental Health Initiative. All rights reserved.
-              </p>
+              <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                <Link to="/faq" className="hover:text-teal-400 transition-colors">FAQ</Link>
+                <Link to="/privacy" className="hover:text-teal-400 transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="hover:text-teal-400 transition-colors">Terms of Use</Link>
+                <Link to="/disclaimer" className="hover:text-teal-400 transition-colors">Disclaimer</Link>
+              </div>
             </div>
+
+            <p className="text-sm text-gray-400 mt-6 text-center">
+              © {new Date().getFullYear()} Lifeferry Mental Health Initiative. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
