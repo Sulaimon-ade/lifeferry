@@ -238,15 +238,17 @@ export default function AdminTeam() {
   };
 
   const updateOrder = async (member: TeamMember, direction: 'up' | 'down') => {
-    const newOrder = direction === 'up' ? member.order_num - 1 : member.order_num + 1;
+    const sorted = [...members].sort((a, b) => a.order_num - b.order_num);
+    const idx = sorted.findIndex((m) => m.id === member.id);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    const neighbor = sorted[swapIdx];
 
     try {
-      const { error } = await supabase
-        .from('team_members')
-        .update({ order_num: newOrder })
-        .eq('id', member.id);
-
-      if (error) throw error;
+      await Promise.all([
+        supabase.from('team_members').update({ order_num: neighbor.order_num }).eq('id', member.id),
+        supabase.from('team_members').update({ order_num: member.order_num }).eq('id', neighbor.id),
+      ]);
       loadMembers();
     } catch (error) {
       console.error('Failed to update order:', error);

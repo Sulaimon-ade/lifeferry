@@ -7,7 +7,7 @@ interface ProtectedRouteProps {
   requiredRole?: UserRole;
 }
 
-export function ProtectedRoute({ children, requiredRole = 'EDITOR' }: ProtectedRouteProps) {
+export function ProtectedRoute({ children, requiredRole = 'user' }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -23,12 +23,11 @@ export function ProtectedRoute({ children, requiredRole = 'EDITOR' }: ProtectedR
   }
 
   const roleHierarchy: Record<UserRole, number> = {
-    SUPER_ADMIN: 3,
-    ADMIN: 2,
-    EDITOR: 1,
+    admin: 2,
+    user: 1,
   };
 
-  if (roleHierarchy[user.role] < roleHierarchy[requiredRole]) {
+  if ((roleHierarchy[user.role] ?? 0) < (roleHierarchy[requiredRole] ?? 0)) {
     return <Navigate to="/admin/dashboard" replace />;
   }
 

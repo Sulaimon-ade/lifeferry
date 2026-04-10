@@ -1,9 +1,11 @@
 import { useState, FormEvent } from 'react';
 import { supabase } from '../../lib/supabase';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 import PublicLayout from '../../components/layouts/PublicLayout';
 import { AlertCircle, Loader2, Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
 
 export default function ContactPage() {
+  const { settings } = useSiteSettings();
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -33,14 +35,13 @@ export default function ContactPage() {
 
       if (error) throw error;
 
+      // Fire notification email — non-blocking
+      supabase.functions.invoke('send-notification', {
+        body: { type: 'contact', data: formData },
+      }).catch(console.error);
+
       setFormSuccess(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-      });
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     } catch (err) {
       console.error('Error submitting contact form:', err);
       setFormError('Failed to send message. Please try again.');
@@ -70,7 +71,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Email</h3>
-              <p className="text-gray-600">info@lifeferry.org</p>
+              <p className="text-gray-600">{settings.contact_email || 'info@lifeferry.org'}</p>
             </div>
           </div>
 
@@ -80,7 +81,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Phone</h3>
-              <p className="text-gray-600">+1 (555) 123-4567</p>
+              <p className="text-gray-600">{settings.contact_phone || ''}</p>
             </div>
           </div>
 
@@ -90,7 +91,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Location</h3>
-              <p className="text-gray-600">123 Mental Health Way, City, State 12345</p>
+              <p className="text-gray-600">{settings.contact_address || ''}</p>
             </div>
           </div>
         </div>

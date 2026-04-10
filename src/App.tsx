@@ -75,7 +75,7 @@ function App() {
           <Route
             path="/admin/pages"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminPages />
               </ProtectedRoute>
             }
@@ -83,7 +83,7 @@ function App() {
           <Route
             path="/admin/team"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminTeam />
               </ProtectedRoute>
             }
@@ -91,7 +91,7 @@ function App() {
           <Route
             path="/admin/services"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminServices />
               </ProtectedRoute>
             }
@@ -131,7 +131,7 @@ function App() {
           <Route
             path="/admin/contact"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminContact />
               </ProtectedRoute>
             }
@@ -139,7 +139,7 @@ function App() {
           <Route
             path="/admin/bookings"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminBookings />
               </ProtectedRoute>
             }
@@ -147,7 +147,7 @@ function App() {
           <Route
             path="/admin/volunteers"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminVolunteers />
               </ProtectedRoute>
             }
@@ -155,7 +155,7 @@ function App() {
           <Route
             path="/admin/newsletters"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminNewsletters />
               </ProtectedRoute>
             }
@@ -163,7 +163,7 @@ function App() {
           <Route
             path="/admin/faq"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminFAQ />
               </ProtectedRoute>
             }
@@ -171,7 +171,7 @@ function App() {
           <Route
             path="/admin/legal"
             element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminLegal />
               </ProtectedRoute>
             }
@@ -179,7 +179,7 @@ function App() {
           <Route
             path="/admin/settings"
             element={
-              <ProtectedRoute requiredRole="SUPER_ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminSettings />
               </ProtectedRoute>
             }
@@ -187,7 +187,7 @@ function App() {
           <Route
             path="/admin/users"
             element={
-              <ProtectedRoute requiredRole="SUPER_ADMIN">
+              <ProtectedRoute requiredRole="admin">
                 <AdminUsers />
               </ProtectedRoute>
             }

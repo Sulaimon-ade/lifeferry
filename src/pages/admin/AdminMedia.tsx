@@ -189,15 +189,17 @@ export default function AdminMedia() {
   };
 
   const updateOrder = async (item: MediaItem, direction: 'up' | 'down') => {
-    const newOrder = direction === 'up' ? item.order_num - 1 : item.order_num + 1;
+    const sorted = [...mediaItems].sort((a, b) => a.order_num - b.order_num);
+    const idx = sorted.findIndex((m) => m.id === item.id);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    const neighbor = sorted[swapIdx];
 
     try {
-      const { error } = await supabase
-        .from('media_items')
-        .update({ order_num: newOrder })
-        .eq('id', item.id);
-
-      if (error) throw error;
+      await Promise.all([
+        supabase.from('media_items').update({ order_num: neighbor.order_num }).eq('id', item.id),
+        supabase.from('media_items').update({ order_num: item.order_num }).eq('id', neighbor.id),
+      ]);
       loadMedia();
     } catch (error) {
       console.error('Failed to update order:', error);

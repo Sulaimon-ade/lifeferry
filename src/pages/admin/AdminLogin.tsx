@@ -74,13 +74,14 @@ export default function AdminLogin() {
 
       if (signupError) throw signupError;
 
+      const emailToFill = signupData.email;
       setSignupSuccess(true);
       setSignupData({ email: '', password: '', confirmPassword: '', fullName: '' });
 
       setTimeout(() => {
         setShowSignup(false);
         setSignupSuccess(false);
-        setEmail(signupData.email);
+        setEmail(emailToFill);
       }, 2000);
 
     } catch (error: any) {

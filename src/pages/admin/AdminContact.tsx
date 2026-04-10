@@ -118,6 +118,9 @@ export default function AdminContact() {
         .eq('id', message.id);
 
       if (error) throw error;
+      if (selectedMessage?.id === message.id) {
+        setSelectedMessage({ ...selectedMessage, is_read: !message.is_read });
+      }
       loadMessages();
     } catch (error) {
       console.error('Failed to toggle read status:', error);

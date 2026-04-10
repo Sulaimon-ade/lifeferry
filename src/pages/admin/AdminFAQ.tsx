@@ -184,15 +184,17 @@ export default function AdminFAQ() {
   };
 
   const updateOrder = async (faq: FAQItem, direction: 'up' | 'down') => {
-    const newOrder = direction === 'up' ? faq.order_num - 1 : faq.order_num + 1;
+    const sorted = [...faqs].sort((a, b) => a.order_num - b.order_num);
+    const idx = sorted.findIndex((f) => f.id === faq.id);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    const neighbor = sorted[swapIdx];
 
     try {
-      const { error } = await supabase
-        .from('faq_items')
-        .update({ order_num: newOrder })
-        .eq('id', faq.id);
-
-      if (error) throw error;
+      await Promise.all([
+        supabase.from('faq_items').update({ order_num: neighbor.order_num }).eq('id', faq.id),
+        supabase.from('faq_items').update({ order_num: faq.order_num }).eq('id', neighbor.id),
+      ]);
       loadFaqs();
     } catch (error) {
       console.error('Failed to update order:', error);

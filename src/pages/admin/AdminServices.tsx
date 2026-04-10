@@ -214,15 +214,17 @@ export default function AdminServices() {
   };
 
   const updateOrder = async (service: Service, direction: 'up' | 'down') => {
-    const newOrder = direction === 'up' ? service.order_num - 1 : service.order_num + 1;
+    const sorted = [...services].sort((a, b) => a.order_num - b.order_num);
+    const idx = sorted.findIndex((s) => s.id === service.id);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    const neighbor = sorted[swapIdx];
 
     try {
-      const { error } = await supabase
-        .from('services')
-        .update({ order_num: newOrder })
-        .eq('id', service.id);
-
-      if (error) throw error;
+      await Promise.all([
+        supabase.from('services').update({ order_num: neighbor.order_num }).eq('id', service.id),
+        supabase.from('services').update({ order_num: service.order_num }).eq('id', neighbor.id),
+      ]);
       loadServices();
     } catch (error) {
       console.error('Failed to update order:', error);

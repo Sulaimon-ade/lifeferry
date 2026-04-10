@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/layouts/AdminLayout';
 import { supabase } from '../../lib/supabase';
 import {
@@ -141,9 +142,9 @@ export default function AdminDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {statCards.map((card) => (
-            <a
+            <Link
               key={card.name}
-              href={card.href}
+              to={card.href}
               className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-gray-200"
             >
               <div className="flex items-center justify-between">
@@ -155,37 +156,37 @@ export default function AdminDashboard() {
                   <card.icon className="h-6 w-6 text-white" />
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a
-              href="/admin/services"
+            <Link
+              to="/admin/services"
               className="px-4 py-3 bg-teal-50 text-teal-700 rounded-lg hover:bg-teal-100 transition-colors text-center font-medium"
             >
               Manage Services
-            </a>
-            <a
-              href="/admin/blog"
+            </Link>
+            <Link
+              to="/admin/blog"
               className="px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-center font-medium"
             >
               Create Blog Post
-            </a>
-            <a
-              href="/admin/programs"
+            </Link>
+            <Link
+              to="/admin/programs"
               className="px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors text-center font-medium"
             >
               Add Event
-            </a>
-            <a
-              href="/admin/resources"
+            </Link>
+            <Link
+              to="/admin/resources"
               className="px-4 py-3 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors text-center font-medium"
             >
               Upload Resource
-            </a>
+            </Link>
           </div>
         </div>
       </div>
