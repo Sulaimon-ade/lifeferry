@@ -5,7 +5,6 @@ import HeroCarousel from '../../components/HeroCarousel';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { supabase } from '../../lib/supabase';
 import { Calendar, ArrowRight, Users, Target, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useInView } from '../../hooks/useInView';
 
 interface PageSection {
   title: string;
@@ -170,9 +169,6 @@ export default function HomePage() {
   const [email, setEmail] = useState('');
   const [subscribeStatus, setSubscribeStatus] = useState('');
 
-  const { ref: missionRef, inView: missionInView } = useInView();
-  const { ref: servicesRef, inView: servicesInView } = useInView();
-
   useEffect(() => {
     loadContent();
   }, []);
@@ -243,12 +239,7 @@ export default function HomePage() {
 
       {/* Mission — photo-anchored */}
       <section className="bg-sand py-20 lg:py-28">
-        <div
-          ref={missionRef}
-          className={`mx-auto grid max-w-7xl items-center gap-10 px-4 transition-all duration-700 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 ${
-            missionInView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          }`}
-        >
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
           <div className="relative overflow-hidden rounded-2xl shadow-lg">
             <img
               src="/images/group-laughter.jpg"
@@ -295,12 +286,8 @@ export default function HomePage() {
       {/* Services — photo-anchored cards */}
       {services.length > 0 && (
         <section className="bg-white py-20 lg:py-28">
-          <div ref={servicesRef} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div
-              className={`text-center transition-all duration-700 ${
-                servicesInView ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-              }`}
-            >
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
               <span className="kicker mb-3">What We Offer</span>
               <h2 className="heading-lg text-deep">Our services</h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
