@@ -80,8 +80,8 @@ export default function ResourceDetailPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -90,12 +90,12 @@ export default function ResourceDetailPage() {
   if (error || !resource) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <div>
               <p className="text-red-800">{error || 'Resource not found.'}</p>
-              <Link to="/resources" className="text-red-600 hover:text-red-700 underline mt-2 inline-block">
+              <Link to="/resources" className="mt-2 inline-block font-bold text-red-700 underline">
                 Back to Resources
               </Link>
             </div>
@@ -107,62 +107,55 @@ export default function ResourceDetailPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="bg-deep">
+        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
           <Link
             to="/resources"
-            className="inline-flex items-center text-teal-600 hover:text-teal-700 mb-6"
+            className="inline-flex items-center gap-2 text-sm font-bold text-brand-100 transition-colors duration-200 hover:text-white"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Resources
+            <ArrowLeft className="h-4 w-4" />
+            Back to resources
           </Link>
 
           {resource.category && (
-            <span className="inline-block px-3 py-1 bg-teal-100 text-teal-800 text-sm font-semibold rounded mb-4">
+            <span className="mt-6 inline-block rounded-full bg-accent-500 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-white">
               {resource.category}
             </span>
           )}
 
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {resource.title}
-          </h1>
+          <h1 className="heading-xl mt-4 text-white">{resource.title}</h1>
 
-          <div className="flex items-center text-gray-500 mb-8">
-            <Download className="h-5 w-5 mr-2" />
-            <span>{resource.download_count} downloads</span>
-          </div>
+          <p className="mt-6 flex items-center gap-2 font-semibold text-brand-100">
+            <Download className="h-4 w-4 text-accent-300" aria-hidden="true" />
+            {resource.download_count} downloads
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         {resource.cover_url && (
           <ResponsiveImage
             src={resource.cover_url}
             alt={resource.title}
-            containerClassName="w-full h-64 sm:h-80 md:h-96 rounded-lg shadow-lg mb-12"
+            fit="contain"
+            containerClassName="w-full max-h-[34rem] rounded-2xl shadow-lg mb-14 bg-sand-dark"
           />
         )}
 
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            About This Resource
-          </h2>
-          <div className="prose prose-lg prose-teal max-w-none">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {resource.description}
-            </p>
+        <section className="mb-14">
+          <span className="kicker mb-3">About This Resource</span>
+          <h2 className="heading-md text-deep">What's inside</h2>
+          <div className="prose prose-lg mt-5 max-w-none">
+            <p className="whitespace-pre-wrap leading-relaxed text-gray-700">{resource.description}</p>
           </div>
         </section>
 
         {resource.tags && resource.tags.length > 0 && (
-          <section className="mb-12">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Tags</h3>
-            <div className="flex flex-wrap gap-2">
+          <section className="mb-14">
+            <h3 className="text-sm font-extrabold uppercase tracking-wider text-gray-500">Tags</h3>
+            <div className="mt-3 flex flex-wrap gap-2">
               {resource.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
-                >
+                <span key={index} className="rounded-full bg-sand-dark px-3 py-1 text-sm font-bold text-gray-600">
                   {tag}
                 </span>
               ))}
@@ -170,52 +163,45 @@ export default function ResourceDetailPage() {
           </section>
         )}
 
-        <section className="bg-gradient-to-r from-teal-500 to-blue-500 rounded-lg p-8 text-center text-white">
-          <div className="flex justify-center mb-4">
-            <FileText className="h-16 w-16 text-white opacity-80" />
-          </div>
-          <h2 className="text-3xl font-bold mb-4">
-            Download This Resource
-          </h2>
-          <p className="text-teal-50 mb-6 max-w-2xl mx-auto">
+        <section className="rounded-2xl bg-deep p-10 text-center">
+          <FileText className="mx-auto h-14 w-14 text-accent-300" aria-hidden="true" />
+          <h2 className="heading-md mt-4 text-white">Download this resource</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-brand-100">
             Access this resource to support your mental health journey.
           </p>
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="inline-flex items-center px-8 py-3 bg-white text-teal-600 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary mt-8 disabled:cursor-wait disabled:opacity-60"
           >
             {downloading ? (
               <>
-                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                Downloading...
+                <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                Downloading…
               </>
             ) : (
               <>
-                <Download className="h-5 w-5 mr-2" />
-                Download Now
+                <Download className="h-5 w-5" aria-hidden="true" />
+                Download now
               </>
             )}
           </button>
         </section>
       </div>
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Explore More Resources
-          </h2>
-          <p className="text-gray-600 mb-6">
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <h2 className="heading-md text-deep">Explore more resources</h2>
+          <p className="mt-3 text-gray-600">
             Browse our collection of helpful materials and guides.
           </p>
-          <Link
-            to="/resources"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            View All Resources
-          </Link>
+          <div className="mt-7">
+            <Link to="/resources" className="btn-secondary">
+              View all resources
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

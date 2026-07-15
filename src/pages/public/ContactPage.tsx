@@ -2,7 +2,13 @@ import { useState, FormEvent } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 import PublicLayout from '../../components/layouts/PublicLayout';
-import { AlertCircle, Loader2, Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
+import PageHeader from '../../components/PageHeader';
+import { AlertCircle, Loader2, Mail, Phone, MapPin, CheckCircle, HeartHandshake } from 'lucide-react';
+
+const inputClass =
+  'w-full rounded-xl border border-brand-200 bg-white px-4 py-3 text-base text-gray-800 placeholder:text-gray-400';
+
+const labelClass = 'mb-1.5 block text-sm font-bold text-deep';
 
 export default function ContactPage() {
   const { settings } = useSiteSettings();
@@ -50,89 +56,68 @@ export default function ContactPage() {
     }
   };
 
+  const contactCards = [
+    { icon: Mail, label: 'Email', value: settings.contact_email || 'info@lifeferry.org' },
+    { icon: Phone, label: 'Phone', value: settings.contact_phone || '' },
+    { icon: MapPin, label: 'Location', value: settings.contact_address || '' },
+  ].filter((card) => card.value);
+
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-6">
-            Contact Us
-          </h1>
-          <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto">
-            We're here to help. Reach out to us with any questions or concerns.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        kicker="Get in Touch"
+        title="We're here to help"
+        description="Reach out to us with any questions or concerns — we'll respond as soon as we can."
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <div className="bg-white rounded-lg shadow-md p-6 flex items-start gap-4">
-            <div className="flex-shrink-0 bg-teal-100 rounded-full p-3">
-              <Mail className="h-6 w-6 text-teal-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Email</h3>
-              <p className="text-gray-600">{settings.contact_email || 'info@lifeferry.org'}</p>
-            </div>
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        {contactCards.length > 0 && (
+          <div className="mb-14 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {contactCards.map((card) => (
+              <div key={card.label} className="flex items-start gap-4 rounded-2xl bg-white p-6 shadow-md">
+                <div className="flex-shrink-0 rounded-full bg-brand-50 p-3">
+                  <card.icon className="h-5 w-5 text-brand-700" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-extrabold uppercase tracking-wide text-deep">{card.label}</h3>
+                  <p className="mt-1 break-words text-gray-600">{card.value}</p>
+                </div>
+              </div>
+            ))}
           </div>
+        )}
 
-          <div className="bg-white rounded-lg shadow-md p-6 flex items-start gap-4">
-            <div className="flex-shrink-0 bg-teal-100 rounded-full p-3">
-              <Phone className="h-6 w-6 text-teal-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Phone</h3>
-              <p className="text-gray-600">{settings.contact_phone || ''}</p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6 flex items-start gap-4">
-            <div className="flex-shrink-0 bg-teal-100 rounded-full p-3">
-              <MapPin className="h-6 w-6 text-teal-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Location</h3>
-              <p className="text-gray-600">{settings.contact_address || ''}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-8 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Send Us a Message
-          </h2>
+        <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-md sm:p-10">
+          <h2 className="heading-md text-deep">Send us a message</h2>
 
           {formSuccess ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 flex items-start gap-3">
-              <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-brand-200 bg-brand-50 p-6">
+              <CheckCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-brand-700" aria-hidden="true" />
               <div>
-                <h3 className="text-lg font-semibold text-green-900 mb-2">
-                  Message Sent Successfully!
-                </h3>
-                <p className="text-green-800">
+                <h3 className="font-display text-lg font-semibold text-deep">Message sent!</h3>
+                <p className="mt-1 text-gray-700">
                   Thank you for reaching out to us. We'll get back to you as soon as possible.
                 </p>
                 <button
                   onClick={() => setFormSuccess(false)}
-                  className="mt-4 text-green-600 hover:text-green-700 font-medium underline"
+                  className="mt-4 cursor-pointer font-bold text-brand-700 underline transition-colors duration-200 hover:text-brand-600"
                 >
-                  Send Another Message
+                  Send another message
                 </button>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="mt-7 space-y-6">
               {formError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4" role="alert">
+                  <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
                   <p className="text-red-800">{formError}</p>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
+                  <label htmlFor="name" className={labelClass}>Full name *</label>
                   <input
                     type="text"
                     id="name"
@@ -140,14 +125,13 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    autoComplete="name"
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
+                  <label htmlFor="email" className={labelClass}>Email address *</label>
                   <input
                     type="email"
                     id="email"
@@ -155,36 +139,34 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    autoComplete="email"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
+                  <label htmlFor="phone" className={labelClass}>Phone number</label>
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    autoComplete="tel"
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject
-                  </label>
+                  <label htmlFor="subject" className={labelClass}>Subject</label>
                   <select
                     id="subject"
                     name="subject"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    className={inputClass}
                   >
                     <option value="">Select a subject</option>
                     <option value="General Inquiry">General Inquiry</option>
@@ -198,9 +180,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Message *
-                </label>
+                <label htmlFor="message" className={labelClass}>Message *</label>
                 <textarea
                   id="message"
                   name="message"
@@ -208,23 +188,23 @@ export default function ContactPage() {
                   onChange={handleInputChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  placeholder="Tell us how we can help..."
+                  className={inputClass}
+                  placeholder="Tell us how we can help…"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={formSubmitting}
-                className="w-full px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary w-full disabled:cursor-wait disabled:opacity-60"
               >
                 {formSubmitting ? (
-                  <span className="flex items-center justify-center">
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    Sending...
-                  </span>
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                    Sending…
+                  </>
                 ) : (
-                  'Send Message'
+                  'Send message'
                 )}
               </button>
             </form>
@@ -232,22 +212,32 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Need Immediate Support?
-          </h2>
-          <p className="text-gray-600 mb-6">
-            If you're in crisis or need immediate assistance, please contact your local emergency services or a crisis helpline.
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <HeartHandshake className="mx-auto h-10 w-10 text-accent-600" aria-hidden="true" />
+          <h2 className="heading-md mt-4 text-deep">Need immediate support?</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-gray-600">
+            If you're in crisis or need immediate assistance, please contact
+            your local emergency services or a crisis helpline right away.
+            {settings.contact_phone && (
+              <>
+                {' '}You can also call us directly during working hours.
+              </>
+            )}
           </p>
-          <div className="bg-white rounded-lg p-6 max-w-md mx-auto">
-            <p className="font-semibold text-gray-900 mb-2">National Crisis Hotline</p>
-            <a href="tel:988" className="text-2xl font-bold text-teal-600 hover:text-teal-700">
-              988
-            </a>
-          </div>
+          {settings.contact_phone && (
+            <div className="mx-auto mt-7 max-w-md rounded-2xl bg-white p-6 shadow-md">
+              <p className="text-sm font-extrabold uppercase tracking-wide text-deep">Lifeferry helpline</p>
+              <a
+                href={`tel:${settings.contact_phone.replace(/[^+\d]/g, '')}`}
+                className="mt-1 inline-block font-display text-3xl font-semibold text-brand-700 transition-colors duration-200 hover:text-brand-600"
+              >
+                {settings.contact_phone}
+              </a>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

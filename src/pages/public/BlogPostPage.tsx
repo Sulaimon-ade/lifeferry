@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
 import ResponsiveImage from '../../components/ResponsiveImage';
-import { AlertCircle, Loader2, Calendar, User, ArrowLeft, Tag } from 'lucide-react';
+import { AlertCircle, Loader2, Calendar, User, ArrowLeft } from 'lucide-react';
 
 interface BlogPost {
   id: string;
@@ -59,8 +59,8 @@ export default function BlogPostPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -69,12 +69,12 @@ export default function BlogPostPage() {
   if (error || !post) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <div>
               <p className="text-red-800">{error || 'Blog post not found.'}</p>
-              <Link to="/blog" className="text-red-600 hover:text-red-700 underline mt-2 inline-block">
+              <Link to="/blog" className="mt-2 inline-block font-bold text-red-700 underline">
                 Back to Blog
               </Link>
             </div>
@@ -87,42 +87,39 @@ export default function BlogPostPage() {
   return (
     <PublicLayout>
       <article>
-        <div className="bg-gradient-to-b from-teal-50 to-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section className="bg-deep">
+          <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
             <Link
               to="/blog"
-              className="inline-flex items-center text-teal-600 hover:text-teal-700 mb-6"
+              className="inline-flex items-center gap-2 text-sm font-bold text-brand-100 transition-colors duration-200 hover:text-white"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Blog
+              <ArrowLeft className="h-4 w-4" />
+              Back to blog
             </Link>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              {post.title}
-            </h1>
+            <h1 className="heading-xl mt-6 text-white">{post.title}</h1>
 
-            <div className="flex flex-wrap gap-4 text-gray-600 mb-8">
+            <div className="mt-6 flex flex-wrap gap-5 text-brand-100">
               {post.author_name && (
-                <div className="flex items-center">
-                  <User className="h-5 w-5 mr-2 text-teal-600" />
-                  <span>{post.author_name}</span>
-                </div>
+                <p className="flex items-center gap-2 font-semibold">
+                  <User className="h-4 w-4 text-accent-300" aria-hidden="true" />
+                  {post.author_name}
+                </p>
               )}
               {post.published_at && (
-                <div className="flex items-center">
-                  <Calendar className="h-5 w-5 mr-2 text-teal-600" />
-                  <span>{formatDate(post.published_at)}</span>
-                </div>
+                <p className="flex items-center gap-2 font-semibold">
+                  <Calendar className="h-4 w-4 text-accent-300" aria-hidden="true" />
+                  <time dateTime={post.published_at}>{formatDate(post.published_at)}</time>
+                </p>
               )}
             </div>
 
             {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-8">
-                <Tag className="h-5 w-5 text-teal-600" />
+              <div className="mt-5 flex flex-wrap gap-2">
                 {post.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-teal-100 text-teal-700 text-sm rounded-full"
+                    className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-brand-100"
                   >
                     {tag}
                   </span>
@@ -130,75 +127,70 @@ export default function BlogPostPage() {
               </div>
             )}
           </div>
-        </div>
+        </section>
 
         {post.cover_url && (
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+          <div className="mx-auto -mt-0 max-w-5xl px-4 pt-10 sm:px-6 lg:px-8">
             <ResponsiveImage
               src={post.cover_url}
               alt={post.title}
-              containerClassName="w-full h-64 sm:h-80 md:h-96 rounded-lg shadow-lg"
+              containerClassName="w-full h-64 sm:h-80 md:h-[28rem] rounded-2xl shadow-lg"
             />
           </div>
         )}
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
           <div
-            className="prose prose-lg prose-teal max-w-none text-gray-700"
+            className="prose prose-lg max-w-none text-gray-700 prose-headings:font-display prose-headings:text-deep prose-a:text-brand-700"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="border-t border-gray-200 pt-8">
-            <div className="flex items-center justify-between">
-              <Link
-                to="/blog"
-                className="inline-flex items-center text-teal-600 hover:text-teal-700 font-medium"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to All Posts
-              </Link>
+        <div className="mx-auto max-w-3xl px-4 pb-14 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-brand-100 pt-8">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 font-bold text-brand-700 transition-colors duration-200 hover:text-brand-600"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to all posts
+            </Link>
 
-              <div className="flex gap-3">
-                <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
-                >
-                  Share on Twitter
-                </a>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
-                >
-                  Share on Facebook
-                </a>
-              </div>
+            <div className="flex gap-3">
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-bold text-gray-700 transition-colors duration-200 hover:bg-brand-50"
+              >
+                Share on X
+              </a>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-bold text-gray-700 transition-colors duration-200 hover:bg-brand-50"
+              >
+                Share on Facebook
+              </a>
             </div>
           </div>
         </div>
       </article>
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Explore More Content
-          </h2>
-          <p className="text-gray-600 mb-6">
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <h2 className="heading-md text-deep">Explore more content</h2>
+          <p className="mt-3 text-gray-600">
             Read more articles on mental health and well-being.
           </p>
-          <Link
-            to="/blog"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            View All Blog Posts
-          </Link>
+          <div className="mt-7">
+            <Link to="/blog" className="btn-secondary">
+              View all blog posts
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

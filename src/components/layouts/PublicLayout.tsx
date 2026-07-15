@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Instagram, Youtube, Linkedin, ChevronDown } from 'lucide-react';
+import { Menu, X, Instagram, Youtube, Linkedin, ChevronDown, HeartHandshake } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 interface PublicLayoutProps {
@@ -44,16 +44,16 @@ function DropdownMenu({ item, onClose }: { item: NavItem; onClose: () => void })
   const location = useLocation();
 
   return (
-    <div className="absolute top-full left-0 mt-1 w-52 bg-white rounded-xl shadow-lg border border-gray-100 py-1.5 z-50">
+    <div className="absolute left-0 top-full z-50 mt-2 w-56 rounded-2xl border border-brand-100 bg-white py-2 shadow-xl">
       {item.children!.map((child) => (
         <Link
           key={child.href}
           to={child.href}
           onClick={onClose}
-          className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
+          className={`block px-5 py-2.5 text-sm font-semibold transition-colors duration-200 ${
             location.pathname === child.href
-              ? 'text-teal-600 bg-teal-50'
-              : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
+              ? 'bg-brand-50 text-brand-700'
+              : 'text-gray-700 hover:bg-brand-50 hover:text-brand-700'
           }`}
         >
           {child.name}
@@ -78,20 +78,26 @@ function NavItemDesktop({ item }: { item: NavItem }) {
         setOpen(false);
       }
     }
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
   }, []);
+
+  const baseClass =
+    'px-3.5 py-2 text-[15px] font-bold rounded-full transition-colors duration-200 cursor-pointer';
+  const stateClass = isActive
+    ? 'text-brand-700'
+    : 'text-gray-700 hover:text-brand-700';
 
   if (item.href) {
     return (
-      <Link
-        to={item.href}
-        className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-          isActive
-            ? 'text-teal-600 bg-teal-50'
-            : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
-        }`}
-      >
+      <Link to={item.href} className={`${baseClass} ${stateClass}`}>
         {item.name}
       </Link>
     );
@@ -101,11 +107,9 @@ function NavItemDesktop({ item }: { item: NavItem }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-          isActive
-            ? 'text-teal-600 bg-teal-50'
-            : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
-        }`}
+        aria-expanded={open}
+        aria-haspopup="true"
+        className={`flex items-center gap-1 ${baseClass} ${stateClass}`}
       >
         {item.name}
         <ChevronDown
@@ -114,6 +118,26 @@ function NavItemDesktop({ item }: { item: NavItem }) {
       </button>
       {open && <DropdownMenu item={item} onClose={() => setOpen(false)} />}
     </div>
+  );
+}
+
+function Wordmark({ dark = false }: { dark?: boolean }) {
+  return (
+    <span className="flex items-center gap-3">
+      <img
+        src="/lifeferry_logo.jpeg"
+        alt=""
+        className="h-11 w-11 rounded-full object-cover"
+      />
+      <span className="leading-tight">
+        <span className={`block font-display text-xl font-semibold ${dark ? 'text-white' : 'text-deep'}`}>
+          Lifeferry
+        </span>
+        <span className={`block text-[11px] font-bold uppercase tracking-[0.16em] ${dark ? 'text-accent-300' : 'text-accent-600'}`}>
+          Mental Health Initiative
+        </span>
+      </span>
+    </span>
   );
 }
 
@@ -129,33 +153,37 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-50">
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Link to="/" className="flex items-center space-x-3">
-              <img
-                src="/lifeferry_logo.jpeg"
-                alt="Lifeferry Logo"
-                className="h-12 w-12 rounded-full object-cover"
-              />
-              <div>
-                <div className="text-xl font-semibold text-gray-900">Lifeferry</div>
-                <div className="text-xs text-gray-500">Mental Health Initiative</div>
-              </div>
+    <div className="flex min-h-screen flex-col bg-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-deep focus:px-5 focus:py-2.5 focus:text-white"
+      >
+        Skip to main content
+      </a>
+
+      <header className="sticky top-0 z-50 border-b border-brand-100 bg-white/95 backdrop-blur">
+        <nav aria-label="Main navigation" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
+            <Link to="/" className="rounded-2xl" aria-label="Lifeferry Mental Health Initiative — home">
+              <Wordmark />
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden lg:flex items-center space-x-1">
+            <div className="hidden items-center gap-1 lg:flex">
               {navigation.map((item) => (
                 <NavItemDesktop key={item.name} item={item} />
               ))}
+              <Link to="/contact" className="btn-primary ml-4 !px-6 !py-2.5 text-[15px]">
+                Get Support
+              </Link>
             </div>
 
             <button
               type="button"
-              className="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100"
+              className="cursor-pointer rounded-full p-2 text-deep hover:bg-brand-50 lg:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -164,18 +192,18 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
 
         {/* Mobile nav */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-gray-200 bg-white">
-            <div className="px-4 py-3 space-y-1">
+          <div className="border-t border-brand-100 bg-white lg:hidden">
+            <div className="space-y-1 px-4 py-4">
               {navigation.map((item) => {
                 if (item.href) {
                   return (
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`block px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                      className={`block rounded-xl px-4 py-3 text-base font-bold transition-colors duration-200 ${
                         location.pathname === item.href
-                          ? 'text-teal-600 bg-teal-50'
-                          : 'text-gray-700 hover:text-teal-600 hover:bg-teal-50'
+                          ? 'bg-brand-50 text-brand-700'
+                          : 'text-gray-800 hover:bg-brand-50'
                       }`}
                     >
                       {item.name}
@@ -188,7 +216,8 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   <div key={item.name}>
                     <button
                       onClick={() => setMobileExpanded(isExpanded ? null : item.name)}
-                      className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-md transition-colors"
+                      aria-expanded={isExpanded}
+                      className="flex w-full cursor-pointer items-center justify-between rounded-xl px-4 py-3 text-base font-bold text-gray-800 transition-colors duration-200 hover:bg-brand-50"
                     >
                       {item.name}
                       <ChevronDown
@@ -196,15 +225,15 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                       />
                     </button>
                     {isExpanded && (
-                      <div className="ml-4 mt-1 space-y-1 border-l-2 border-teal-100 pl-3">
+                      <div className="ml-4 mt-1 space-y-1 border-l-2 border-accent-300 pl-3">
                         {item.children!.map((child) => (
                           <Link
                             key={child.href}
                             to={child.href}
-                            className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                            className={`block rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${
                               location.pathname === child.href
-                                ? 'text-teal-600 bg-teal-50'
-                                : 'text-gray-600 hover:text-teal-600 hover:bg-teal-50'
+                                ? 'bg-brand-50 text-brand-700'
+                                : 'text-gray-600 hover:bg-brand-50 hover:text-brand-700'
                             }`}
                           >
                             {child.name}
@@ -215,103 +244,109 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                   </div>
                 );
               })}
+              <Link to="/contact" className="btn-primary mt-3 w-full">
+                Get Support
+              </Link>
             </div>
           </div>
         )}
       </header>
 
-      <main className="flex-grow">{children}</main>
+      <main id="main-content" className="flex-grow">{children}</main>
 
-      <footer className="bg-gray-900 text-gray-300 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
-                <img
-                  src="/lifeferry_logo.jpeg"
-                  alt="Lifeferry Logo"
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="text-lg font-semibold text-white">Lifeferry</div>
-                  <div className="text-sm text-gray-400">Mental Health Initiative</div>
-                </div>
-              </div>
-              <p className="text-sm text-gray-400 max-w-md">
-                Your partner through life's cruise. Providing compassionate mental health support with a special focus on women's mental health and well-being.
+      <footer className="bg-deep text-brand-100">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <Wordmark dark />
+              <p className="mt-5 max-w-xs text-sm leading-relaxed text-brand-100/90">
+                Your partner through life's cruise. Providing compassionate
+                mental health support with a special focus on women's mental
+                health and well-being.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-8 col-span-1 md:col-span-2">
-              <div>
-                <h3 className="text-white font-semibold mb-4">About</h3>
-                <ul className="space-y-2">
-                  <li><Link to="/about" className="text-sm hover:text-teal-400 transition-colors">About Us</Link></li>
-                  <li><Link to="/services" className="text-sm hover:text-teal-400 transition-colors">Services</Link></li>
-                  <li><Link to="/team" className="text-sm hover:text-teal-400 transition-colors">Our Team</Link></li>
-                  <li><Link to="/partner" className="text-sm hover:text-teal-400 transition-colors">Partner With Us</Link></li>
-                  <li><Link to="/contact" className="text-sm hover:text-teal-400 transition-colors">Contact</Link></li>
-                </ul>
-              </div>
+            <nav aria-label="About links">
+              <h3 className="text-sm font-extrabold uppercase tracking-wider text-accent-300">About</h3>
+              <ul className="mt-4 space-y-2.5">
+                <li><Link to="/about" className="text-sm font-semibold transition-colors duration-200 hover:text-white">About Us</Link></li>
+                <li><Link to="/services" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Services</Link></li>
+                <li><Link to="/team" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Our Team</Link></li>
+                <li><Link to="/partner" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Partner With Us</Link></li>
+                <li><Link to="/contact" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Contact</Link></li>
+              </ul>
+            </nav>
 
-              <div>
-                <h3 className="text-white font-semibold mb-4">Resources</h3>
-                <ul className="space-y-2">
-                  <li><Link to="/resources" className="text-sm hover:text-teal-400 transition-colors">Resources & Guides</Link></li>
-                  <li><Link to="/programs" className="text-sm hover:text-teal-400 transition-colors">Programs & Events</Link></li>
-                  <li><Link to="/media" className="text-sm hover:text-teal-400 transition-colors">Media</Link></li>
-                  <li><Link to="/blog" className="text-sm hover:text-teal-400 transition-colors">Blog</Link></li>
-                </ul>
+            <nav aria-label="Resource links">
+              <h3 className="text-sm font-extrabold uppercase tracking-wider text-accent-300">Resources</h3>
+              <ul className="mt-4 space-y-2.5">
+                <li><Link to="/resources" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Resources & Guides</Link></li>
+                <li><Link to="/programs" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Programs & Events</Link></li>
+                <li><Link to="/media" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Media</Link></li>
+                <li><Link to="/blog" className="text-sm font-semibold transition-colors duration-200 hover:text-white">Blog</Link></li>
+              </ul>
+            </nav>
+
+            <div>
+              <h3 className="text-sm font-extrabold uppercase tracking-wider text-accent-300">In a difficult moment?</h3>
+              <p className="mt-4 flex items-start gap-2.5 text-sm leading-relaxed text-brand-100/90">
+                <HeartHandshake className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" />
+                <span>
+                  You are not alone. Reach out through our{' '}
+                  <Link to="/contact" className="font-bold text-white underline decoration-accent-500 underline-offset-2 hover:decoration-2">
+                    contact page
+                  </Link>{' '}
+                  or explore our{' '}
+                  <Link to="/resources" className="font-bold text-white underline decoration-accent-500 underline-offset-2 hover:decoration-2">
+                    support resources
+                  </Link>
+                  .
+                </span>
+              </p>
+              <div className="mt-6 flex items-center gap-3" aria-label="Social media">
+                <a
+                  href="https://www.instagram.com/lifeferryng"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/10 p-2.5 transition-colors duration-200 hover:bg-accent-500"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://www.youtube.com/@Joycethebeloved"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/10 p-2.5 transition-colors duration-200 hover:bg-accent-500"
+                  aria-label="YouTube"
+                >
+                  <Youtube className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/life-ferry-769918376/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/10 p-2.5 transition-colors duration-200 hover:bg-accent-500"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <span className="text-white text-sm font-semibold">Follow Us</span>
-                <div className="flex items-center space-x-3">
-                  <a
-                    href="https://www.instagram.com/lifeferryng"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="h-5 w-5" />
-                  </a>
-                  <a
-                    href="https://www.youtube.com/@Joycethebeloved"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
-                    aria-label="YouTube"
-                  >
-                    <Youtube className="h-5 w-5" />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/life-ferry-769918376/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-gray-800 rounded-full hover:bg-teal-600 transition-colors"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="h-5 w-5" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                <Link to="/faq" className="hover:text-teal-400 transition-colors">FAQ</Link>
-                <Link to="/privacy" className="hover:text-teal-400 transition-colors">Privacy Policy</Link>
-                <Link to="/terms" className="hover:text-teal-400 transition-colors">Terms of Use</Link>
-                <Link to="/disclaimer" className="hover:text-teal-400 transition-colors">Disclaimer</Link>
+          <div className="mt-12 border-t border-white/10 pt-8">
+            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <p className="text-xs text-brand-100/80">
+                © {new Date().getFullYear()} Lifeferry Mental Health Initiative. All rights reserved.
+              </p>
+              <div className="flex flex-wrap gap-5 text-xs font-semibold">
+                <Link to="/faq" className="transition-colors duration-200 hover:text-white">FAQ</Link>
+                <Link to="/privacy" className="transition-colors duration-200 hover:text-white">Privacy Policy</Link>
+                <Link to="/terms" className="transition-colors duration-200 hover:text-white">Terms of Use</Link>
+                <Link to="/disclaimer" className="transition-colors duration-200 hover:text-white">Disclaimer</Link>
               </div>
             </div>
-
-            <p className="text-sm text-gray-400 mt-6 text-center">
-              © {new Date().getFullYear()} Lifeferry Mental Health Initiative. All rights reserved.
-            </p>
           </div>
         </div>
       </footer>
