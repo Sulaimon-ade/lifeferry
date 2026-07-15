@@ -1,7 +1,8 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
-import { AlertCircle, Loader2, Heart, Users, DollarSign, CheckCircle } from 'lucide-react';
+import PageHeader from '../../components/PageHeader';
+import { AlertCircle, Loader2, Heart, Users, HandCoins, CheckCircle } from 'lucide-react';
 
 interface PageSection {
   id: string;
@@ -10,6 +11,29 @@ interface PageSection {
   content: string;
   order_num: number;
 }
+
+const inputClass =
+  'w-full rounded-xl border border-brand-200 bg-white px-4 py-3 text-base text-gray-800 placeholder:text-gray-400';
+
+const labelClass = 'mb-1.5 block text-sm font-bold text-deep';
+
+const ways = [
+  {
+    icon: Heart,
+    title: 'Volunteer',
+    text: 'Share your time and skills to support our mission.',
+  },
+  {
+    icon: Users,
+    title: 'Partnership',
+    text: 'Collaborate with us on programs and initiatives.',
+  },
+  {
+    icon: HandCoins,
+    title: 'Donate',
+    text: 'Support our work with a financial contribution.',
+  },
+];
 
 export default function PartnerPage() {
   const [sections, setSections] = useState<PageSection[]>([]);
@@ -89,8 +113,8 @@ export default function PartnerPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -99,9 +123,9 @@ export default function PartnerPage() {
   if (error) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <p className="text-red-800">{error}</p>
           </div>
         </div>
@@ -115,99 +139,79 @@ export default function PartnerPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-6">
-            Partner With Us
-          </h1>
-          <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto">
-            Join us in making a difference in mental health support and awareness.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        kicker="Get Involved"
+        title="Partner with us"
+        description="Join us in making a difference in mental health support and awareness."
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-white rounded-lg shadow-md p-8 text-center hover:shadow-lg transition-shadow">
-            <div className="flex justify-center mb-4">
-              <Heart className="h-12 w-12 text-teal-600" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Volunteer</h3>
-            <p className="text-gray-600">
-              Share your time and skills to support our mission.
-            </p>
+      {/* Ways to help — photo-anchored intro */}
+      <section className="bg-sand py-16 lg:py-20">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg">
+            <img
+              src="/images/volunteer.jpg"
+              alt="A volunteer in a brightly coloured shirt at a community event"
+              className="aspect-[4/3] w-full object-cover"
+              loading="lazy"
+            />
           </div>
-
-          <div className="bg-white rounded-lg shadow-md p-8 text-center hover:shadow-lg transition-shadow">
-            <div className="flex justify-center mb-4">
-              <Users className="h-12 w-12 text-teal-600" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Partnership</h3>
-            <p className="text-gray-600">
-              Collaborate with us on programs and initiatives.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-8 text-center hover:shadow-lg transition-shadow">
-            <div className="flex justify-center mb-4">
-              <DollarSign className="h-12 w-12 text-teal-600" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Donate</h3>
-            <p className="text-gray-600">
-              Support our work with a financial contribution.
-            </p>
+          <div className="space-y-8">
+            {ways.map((way) => (
+              <div key={way.title} className="border-l-4 border-accent-500 pl-5">
+                <way.icon className="h-6 w-6 text-brand-700" aria-hidden="true" />
+                <h3 className="mt-2 font-display text-xl font-semibold text-deep">{way.title}</h3>
+                <p className="mt-1 text-[15px] leading-relaxed text-gray-600">{way.text}</p>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
+      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         {volunteerSection && (
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {volunteerSection.title}
-            </h2>
+          <section className="mb-14">
+            <span className="kicker mb-3">Volunteer</span>
+            <h2 className="heading-md text-deep">{volunteerSection.title}</h2>
             <div
-              className="prose prose-lg prose-teal max-w-none mb-8 text-gray-700 leading-relaxed"
+              className="prose prose-lg mt-5 max-w-none leading-relaxed text-gray-700"
               dangerouslySetInnerHTML={{ __html: volunteerSection.content }}
             />
           </section>
         )}
 
-        <section className="bg-white rounded-lg shadow-md p-8 mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Volunteer Application
-          </h2>
+        <section className="mb-14 rounded-2xl bg-white p-8 shadow-md sm:p-10">
+          <h2 className="heading-md text-deep">Volunteer application</h2>
 
           {formSuccess ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 flex items-start gap-3">
-              <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-brand-200 bg-brand-50 p-6">
+              <CheckCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-brand-700" aria-hidden="true" />
               <div>
-                <h3 className="text-lg font-semibold text-green-900 mb-2">
-                  Application Submitted!
-                </h3>
-                <p className="text-green-800">
-                  Thank you for your interest in volunteering with us. We'll review your application and get back to you soon.
+                <h3 className="font-display text-lg font-semibold text-deep">Application submitted!</h3>
+                <p className="mt-1 text-gray-700">
+                  Thank you for your interest in volunteering with us. We'll
+                  review your application and get back to you soon.
                 </p>
                 <button
                   onClick={() => setFormSuccess(false)}
-                  className="mt-4 text-green-600 hover:text-green-700 font-medium underline"
+                  className="mt-4 cursor-pointer font-bold text-brand-700 underline transition-colors duration-200 hover:text-brand-600"
                 >
-                  Submit Another Application
+                  Submit another application
                 </button>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="mt-7 space-y-6">
               {formError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4" role="alert">
+                  <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
                   <p className="text-red-800">{formError}</p>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
+                  <label htmlFor="name" className={labelClass}>Full name *</label>
                   <input
                     type="text"
                     id="name"
@@ -215,14 +219,13 @@ export default function PartnerPage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    autoComplete="name"
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
+                  <label htmlFor="email" className={labelClass}>Email address *</label>
                   <input
                     type="email"
                     id="email"
@@ -230,15 +233,14 @@ export default function PartnerPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    autoComplete="email"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number *
-                </label>
+                <label htmlFor="phone" className={labelClass}>Phone number *</label>
                 <input
                   type="tel"
                   id="phone"
@@ -246,20 +248,19 @@ export default function PartnerPage() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  autoComplete="tel"
+                  className={inputClass}
                 />
               </div>
 
               <div>
-                <label htmlFor="interest_area" className="block text-sm font-medium text-gray-700 mb-2">
-                  Area of Interest
-                </label>
+                <label htmlFor="interest_area" className={labelClass}>Area of interest</label>
                 <select
                   id="interest_area"
                   name="interest_area"
                   value={formData.interest_area}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className={inputClass}
                 >
                   <option value="">Select an area</option>
                   <option value="Counseling Support">Counseling Support</option>
@@ -272,32 +273,30 @@ export default function PartnerPage() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Tell Us About Yourself
-                </label>
+                <label htmlFor="message" className={labelClass}>Tell us about yourself</label>
                 <textarea
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
                   rows={5}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  placeholder="Share your experience, skills, and why you'd like to volunteer with us..."
+                  className={inputClass}
+                  placeholder="Share your experience, skills, and why you'd like to volunteer with us…"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={formSubmitting}
-                className="w-full px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary w-full disabled:cursor-wait disabled:opacity-60"
               >
                 {formSubmitting ? (
-                  <span className="flex items-center justify-center">
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    Submitting...
-                  </span>
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                    Submitting…
+                  </>
                 ) : (
-                  'Submit Application'
+                  'Submit application'
                 )}
               </button>
             </form>
@@ -305,31 +304,25 @@ export default function PartnerPage() {
         </section>
 
         {partnershipSection && (
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {partnershipSection.title}
-            </h2>
+          <section className="mb-14">
+            <span className="kicker mb-3">Partnership</span>
+            <h2 className="heading-md text-deep">{partnershipSection.title}</h2>
             <div
-              className="prose prose-lg prose-teal max-w-none text-gray-700 leading-relaxed"
+              className="prose prose-lg mt-5 max-w-none leading-relaxed text-gray-700"
               dangerouslySetInnerHTML={{ __html: partnershipSection.content }}
             />
           </section>
         )}
 
         {donateSection && (
-          <section className="bg-gradient-to-r from-teal-500 to-blue-500 rounded-lg p-8 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">
-              {donateSection.title}
-            </h2>
+          <section className="rounded-2xl bg-deep p-10 text-center">
+            <h2 className="heading-md text-white">{donateSection.title}</h2>
             <div
-              className="prose prose-lg max-w-none mb-6 text-teal-50 leading-relaxed"
+              className="prose prose-lg mx-auto mt-4 max-w-none leading-relaxed text-brand-100 prose-p:text-brand-100"
               dangerouslySetInnerHTML={{ __html: donateSection.content }}
             />
-            <a
-              href="/contact"
-              className="inline-block px-8 py-3 bg-white text-teal-600 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg shadow-lg"
-            >
-              Get in Touch
+            <a href="/contact" className="btn-primary mt-8">
+              Get in touch
             </a>
           </section>
         )}

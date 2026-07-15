@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import PageHeader from '../../components/PageHeader';
 import ResponsiveImage from '../../components/ResponsiveImage';
-import { AlertCircle, Loader2, Calendar, User, ChevronLeft, ChevronRight } from 'lucide-react';
+import { AlertCircle, Loader2, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface BlogPost {
@@ -60,8 +61,8 @@ export default function BlogPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -70,9 +71,9 @@ export default function BlogPage() {
   if (error) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <p className="text-red-800">{error}</p>
           </div>
         </div>
@@ -82,51 +83,44 @@ export default function BlogPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-6">
-            Blog
-          </h1>
-          <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto">
-            Insights, stories, and guidance on mental health and well-being.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        kicker="Our Blog"
+        title="Insights & stories"
+        description="Insights, stories, and guidance on mental health and well-being."
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {posts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500">No blog posts available at this time.</p>
-          </div>
+          <p className="py-12 text-center text-gray-500">No blog posts available at this time.</p>
         ) : (
           <>
-            <div className="flex justify-end gap-3 mb-6">
+            <div className="mb-6 flex justify-end gap-3">
               <button
                 onClick={() => scroll('left')}
-                className="p-2.5 rounded-full border border-gray-200 bg-white hover:bg-teal-50 hover:border-teal-300 transition-colors shadow-sm"
+                className="cursor-pointer rounded-full border border-brand-200 bg-white p-2.5 transition-colors duration-200 hover:bg-brand-50"
                 aria-label="Scroll left"
               >
-                <ChevronLeft className="h-5 w-5 text-gray-600" />
+                <ChevronLeft className="h-5 w-5 text-deep" />
               </button>
               <button
                 onClick={() => scroll('right')}
-                className="p-2.5 rounded-full border border-gray-200 bg-white hover:bg-teal-50 hover:border-teal-300 transition-colors shadow-sm"
+                className="cursor-pointer rounded-full border border-brand-200 bg-white p-2.5 transition-colors duration-200 hover:bg-brand-50"
                 aria-label="Scroll right"
               >
-                <ChevronRight className="h-5 w-5 text-gray-600" />
+                <ChevronRight className="h-5 w-5 text-deep" />
               </button>
             </div>
 
             <div
               ref={scrollRef}
-              className="flex gap-6 overflow-x-auto scroll-smooth pb-4 snap-x snap-mandatory"
+              className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-4"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {posts.map((post) => (
                 <Link
                   key={post.id}
                   to={`/blog/${post.slug}`}
-                  className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group flex-none w-[300px] md:w-[360px] snap-start"
+                  className="group w-[300px] flex-none snap-start overflow-hidden rounded-2xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl md:w-[360px]"
                 >
                   {post.cover_url ? (
                     <div className="overflow-hidden">
@@ -135,43 +129,45 @@ export default function BlogPage() {
                         alt={post.title}
                         aspectRatio="video"
                         containerClassName=""
-                        className="group-hover:scale-105 transition-transform duration-500"
+                        className="transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   ) : (
-                    <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500" />
+                    <img
+                      src="/images/mindfulness-sunrise.jpg"
+                      alt=""
+                      className="aspect-video w-full object-cover"
+                      loading="lazy"
+                    />
                   )}
 
                   <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-teal-600 transition-colors line-clamp-2">
+                    <time
+                      dateTime={post.published_at}
+                      className="text-sm font-bold uppercase tracking-wide text-accent-600"
+                    >
+                      {formatDate(post.published_at)}
+                    </time>
+                    <h3 className="mt-3 line-clamp-2 font-display text-xl font-semibold leading-snug text-deep transition-colors duration-200 group-hover:text-brand-600">
                       {post.title}
                     </h3>
-
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-gray-600">
                       {post.excerpt}
                     </p>
 
-                    <div className="space-y-1.5 text-sm text-gray-500 mb-4">
-                      {post.author_name && (
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-teal-600 shrink-0" />
-                          <span>{post.author_name}</span>
-                        </div>
-                      )}
-                      {post.published_at && (
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-teal-600 shrink-0" />
-                          <span>{formatDate(post.published_at)}</span>
-                        </div>
-                      )}
-                    </div>
+                    {post.author_name && (
+                      <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-gray-500">
+                        <User className="h-4 w-4 shrink-0 text-brand-600" aria-hidden="true" />
+                        {post.author_name}
+                      </p>
+                    )}
 
                     {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
+                      <div className="mt-4 flex flex-wrap gap-2">
                         {post.tags.slice(0, 3).map((tag, index) => (
                           <span
                             key={index}
-                            className="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded"
+                            className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-800"
                           >
                             {tag}
                           </span>
@@ -186,20 +182,19 @@ export default function BlogPage() {
         )}
       </div>
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Stay Informed</h2>
-          <p className="text-gray-600 mb-6">
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <h2 className="heading-md text-deep">Stay informed</h2>
+          <p className="mt-3 text-gray-600">
             Subscribe to our newsletter to receive updates and new blog posts.
           </p>
-          <Link
-            to="/contact"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            Subscribe
-          </Link>
+          <div className="mt-7">
+            <Link to="/contact" className="btn-secondary">
+              Subscribe
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

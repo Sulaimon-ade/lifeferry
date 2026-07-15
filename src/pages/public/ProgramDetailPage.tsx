@@ -63,8 +63,8 @@ export default function ProgramDetailPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -73,12 +73,12 @@ export default function ProgramDetailPage() {
   if (error || !program) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <div>
               <p className="text-red-800">{error || 'Program not found.'}</p>
-              <Link to="/programs" className="text-red-600 hover:text-red-700 underline mt-2 inline-block">
+              <Link to="/programs" className="mt-2 inline-block font-bold text-red-700 underline">
                 Back to Programs
               </Link>
             </div>
@@ -90,73 +90,67 @@ export default function ProgramDetailPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="bg-deep">
+        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
           <Link
             to="/programs"
-            className="inline-flex items-center text-teal-600 hover:text-teal-700 mb-6"
+            className="inline-flex items-center gap-2 text-sm font-bold text-brand-100 transition-colors duration-200 hover:text-white"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Programs
+            <ArrowLeft className="h-4 w-4" />
+            Back to programs
           </Link>
 
-          <div className="flex items-center gap-2 mb-4">
-            <span
-              className={`inline-block px-3 py-1 rounded text-sm font-semibold ${
-                program.status === 'UPCOMING'
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-100 text-gray-600'
-              }`}
-            >
-              {program.status}
-            </span>
-          </div>
+          <span
+            className={`mt-6 inline-block rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-wide ${
+              program.status === 'UPCOMING'
+                ? 'bg-accent-500 text-white'
+                : 'bg-white/15 text-brand-100'
+            }`}
+          >
+            {program.status === 'UPCOMING' ? 'Upcoming' : 'Past event'}
+          </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {program.title}
-          </h1>
+          <h1 className="heading-xl mt-4 text-white">{program.title}</h1>
 
-          <div className="space-y-3 mb-8">
-            <div className="flex items-start text-lg text-gray-700">
-              <Calendar className="h-6 w-6 mr-3 text-teal-600 mt-0.5 flex-shrink-0" />
-              <span>{formatDate(program.event_datetime)}</span>
-            </div>
+          <div className="mt-7 space-y-2.5">
+            <p className="flex items-start gap-3 text-lg text-brand-100">
+              <Calendar className="mt-1 h-5 w-5 flex-shrink-0 text-accent-300" aria-hidden="true" />
+              <time dateTime={program.event_datetime}>{formatDate(program.event_datetime)}</time>
+            </p>
             {program.location && (
-              <div className="flex items-start text-lg text-gray-700">
-                <MapPin className="h-6 w-6 mr-3 text-teal-600 mt-0.5 flex-shrink-0" />
-                <span>{program.location}</span>
-              </div>
+              <p className="flex items-start gap-3 text-lg text-brand-100">
+                <MapPin className="mt-1 h-5 w-5 flex-shrink-0 text-accent-300" aria-hidden="true" />
+                {program.location}
+              </p>
             )}
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         {program.image_url && (
           <ResponsiveImage
             src={program.image_url}
             alt={program.title}
-            containerClassName="w-full h-64 sm:h-80 md:h-96 rounded-lg shadow-lg mb-12"
+            fit="contain"
+            containerClassName="w-full max-h-[34rem] rounded-2xl shadow-lg mb-14 bg-sand-dark"
           />
         )}
 
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            About This Program
-          </h2>
-          <div className="prose prose-lg prose-teal max-w-none">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {program.description}
-            </p>
+        <section className="mb-14">
+          <span className="kicker mb-3">About This Program</span>
+          <h2 className="heading-md text-deep">What it's about</h2>
+          <div className="prose prose-lg mt-5 max-w-none">
+            <p className="whitespace-pre-wrap leading-relaxed text-gray-700">{program.description}</p>
           </div>
         </section>
 
         {program.link && (
-          <section className="bg-gradient-to-r from-teal-500 to-blue-500 rounded-lg p-8 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">
-              {program.status === 'UPCOMING' ? 'Register Now' : 'Learn More'}
+          <section className="rounded-2xl bg-deep p-10 text-center">
+            <h2 className="heading-md text-white">
+              {program.status === 'UPCOMING' ? 'Register now' : 'Learn more'}
             </h2>
-            <p className="text-teal-50 mb-6 max-w-2xl mx-auto">
+            <p className="mx-auto mt-4 max-w-2xl text-brand-100">
               {program.status === 'UPCOMING'
                 ? 'Reserve your spot for this upcoming program.'
                 : 'Find out more about this event and view related content.'}
@@ -165,31 +159,28 @@ export default function ProgramDetailPage() {
               href={program.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-8 py-3 bg-white text-teal-600 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg shadow-lg"
+              className="btn-primary mt-8"
             >
-              <ExternalLink className="h-5 w-5 mr-2" />
-              Visit Event Page
+              <ExternalLink className="h-5 w-5" aria-hidden="true" />
+              Visit event page
             </a>
           </section>
         )}
       </div>
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Explore More Programs
-          </h2>
-          <p className="text-gray-600 mb-6">
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <h2 className="heading-md text-deep">Explore more programs</h2>
+          <p className="mt-3 text-gray-600">
             Discover other programs and events that might interest you.
           </p>
-          <Link
-            to="/programs"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            View All Programs
-          </Link>
+          <div className="mt-7">
+            <Link to="/programs" className="btn-secondary">
+              View all programs
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

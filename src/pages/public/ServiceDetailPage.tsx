@@ -54,8 +54,8 @@ export default function ServiceDetailPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -64,12 +64,12 @@ export default function ServiceDetailPage() {
   if (error || !service) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <div>
               <p className="text-red-800">{error || 'Service not found.'}</p>
-              <Link to="/services" className="text-red-600 hover:text-red-700 underline mt-2 inline-block">
+              <Link to="/services" className="mt-2 inline-block font-bold text-red-700 underline">
                 Back to Services
               </Link>
             </div>
@@ -81,107 +81,95 @@ export default function ServiceDetailPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Header */}
+      <section className="bg-deep">
+        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
           <Link
             to="/services"
-            className="inline-flex items-center text-teal-600 hover:text-teal-700 mb-6"
+            className="inline-flex items-center gap-2 text-sm font-bold text-brand-100 transition-colors duration-200 hover:text-white"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Services
+            <ArrowLeft className="h-4 w-4" />
+            Back to services
           </Link>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {service.title}
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <h1 className="heading-xl mt-6 text-white">{service.title}</h1>
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-brand-100">
             {service.description}
           </p>
 
-          <div className="flex flex-wrap gap-4 mb-8">
-            {service.duration && (
-              <div className="flex items-center px-4 py-2 bg-white rounded-lg shadow-sm">
-                <Clock className="h-5 w-5 text-teal-600 mr-2" />
-                <span className="text-gray-700">{service.duration}</span>
-              </div>
-            )}
-            {service.price && (
-              <div className="flex items-center px-4 py-2 bg-white rounded-lg shadow-sm">
-                <Users className="h-5 w-5 text-teal-600 mr-2" />
-                <span className="text-gray-700">{service.price}</span>
-              </div>
-            )}
-          </div>
+          {(service.duration || service.price) && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              {service.duration && (
+                <p className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
+                  <Clock className="h-4 w-4 text-accent-300" aria-hidden="true" />
+                  {service.duration}
+                </p>
+              )}
+              {service.price && (
+                <p className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white">
+                  <Users className="h-4 w-4 text-accent-300" aria-hidden="true" />
+                  {service.price}
+                </p>
+              )}
+            </div>
+          )}
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         {service.details && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              About This Service
-            </h2>
-            <div className="prose prose-lg prose-teal max-w-none">
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {service.details}
-              </p>
+          <section className="mb-14">
+            <span className="kicker mb-3">About This Service</span>
+            <h2 className="heading-md text-deep">What to expect</h2>
+            <div className="prose prose-lg mt-5 max-w-none">
+              <p className="whitespace-pre-wrap leading-relaxed text-gray-700">{service.details}</p>
             </div>
           </section>
         )}
 
         {service.eligibility && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Eligibility
-            </h2>
-            <div className="bg-teal-50 rounded-lg p-6">
+          <section className="mb-14">
+            <h2 className="heading-md text-deep">Eligibility</h2>
+            <div className="mt-5 rounded-2xl border-l-4 border-brand-600 bg-brand-50 p-6">
               <div className="flex items-start gap-3">
-                <CheckCircle className="h-6 w-6 text-teal-600 mt-0.5 flex-shrink-0" />
-                <p className="text-gray-700 whitespace-pre-wrap">
-                  {service.eligibility}
-                </p>
+                <CheckCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-brand-700" aria-hidden="true" />
+                <p className="whitespace-pre-wrap leading-relaxed text-gray-700">{service.eligibility}</p>
               </div>
             </div>
           </section>
         )}
 
-        <section className="bg-gradient-to-r from-teal-500 to-blue-500 rounded-lg p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to Book This Service?
-          </h2>
-          <p className="text-teal-50 mb-6 max-w-2xl mx-auto">
+        <section className="rounded-2xl bg-deep p-10 text-center">
+          <h2 className="heading-md text-white">Ready to book this service?</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-brand-100">
             Take the first step toward better mental health. Book a session with us today.
           </p>
-          <button
-            onClick={handleBookingClick}
-            className="inline-flex items-center px-8 py-3 bg-white text-teal-600 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg shadow-lg"
-          >
-            <Calendar className="h-5 w-5 mr-2" />
-            Book Now
+          <button onClick={handleBookingClick} className="btn-primary mt-8">
+            <Calendar className="h-5 w-5" aria-hidden="true" />
+            Book now
           </button>
         </section>
       </div>
 
       {showBookingModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Book {service.title}
-            </h3>
-            <p className="text-gray-600 mb-6">
-              To book this service, please contact us directly. Our team will help you schedule an appointment.
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-deep/70 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-8">
+            <h3 className="heading-md text-deep">Book {service.title}</h3>
+            <p className="mt-4 text-gray-600">
+              To book this service, please contact us directly. Our team will
+              help you schedule an appointment.
             </p>
-            <div className="space-y-3">
+            <div className="mt-7 space-y-3">
               <Link
                 to="/contact"
-                className="block w-full px-4 py-3 bg-teal-600 text-white text-center rounded-lg hover:bg-teal-700 transition-colors font-medium"
+                className="btn-primary w-full"
                 onClick={() => setShowBookingModal(false)}
               >
-                Go to Contact Page
+                Go to contact page
               </Link>
               <button
                 onClick={() => setShowBookingModal(false)}
-                className="block w-full px-4 py-3 bg-gray-100 text-gray-700 text-center rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                className="btn-outline w-full text-gray-700 hover:bg-gray-100"
               >
                 Close
               </button>
@@ -190,22 +178,19 @@ export default function ServiceDetailPage() {
         </div>
       )}
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Have Questions?
-          </h2>
-          <p className="text-gray-600 mb-6">
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <h2 className="heading-md text-deep">Have questions?</h2>
+          <p className="mt-3 text-gray-600">
             Not sure if this service is right for you? Get in touch with us.
           </p>
-          <Link
-            to="/contact"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            Contact Us
-          </Link>
+          <div className="mt-7">
+            <Link to="/contact" className="btn-secondary">
+              Contact us
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

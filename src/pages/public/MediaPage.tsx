@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import PageHeader from '../../components/PageHeader';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { AlertCircle, Loader2, Image as ImageIcon, Video, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface MediaItem {
   id: string;
@@ -12,6 +14,12 @@ interface MediaItem {
   thumbnail_url: string;
   order_num: number;
 }
+
+const FILTERS = [
+  { key: 'ALL', label: 'All media', icon: null },
+  { key: 'PHOTO', label: 'Photos', icon: ImageIcon },
+  { key: 'VIDEO', label: 'Videos', icon: Video },
+] as const;
 
 export default function MediaPage() {
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -58,8 +66,8 @@ export default function MediaPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -68,9 +76,9 @@ export default function MediaPage() {
   if (error) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <p className="text-red-800">{error}</p>
           </div>
         </div>
@@ -80,96 +88,61 @@ export default function MediaPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-6">
-            Media Gallery
-          </h1>
-          <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto">
-            Explore photos and videos from our programs, events, and community activities.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        kicker="Gallery"
+        title="Media gallery"
+        description="Explore photos and videos from our programs, events, and community activities."
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-wrap gap-3 mb-8 justify-center">
-          <button
-            onClick={() => setFilter('ALL')}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'ALL'
-                ? 'bg-teal-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-teal-50 border border-gray-300'
-            }`}
-          >
-            All Media
-          </button>
-          <button
-            onClick={() => setFilter('PHOTO')}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors flex items-center ${
-              filter === 'PHOTO'
-                ? 'bg-teal-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-teal-50 border border-gray-300'
-            }`}
-          >
-            <ImageIcon className="h-4 w-4 mr-2" />
-            Photos
-          </button>
-          <button
-            onClick={() => setFilter('VIDEO')}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors flex items-center ${
-              filter === 'VIDEO'
-                ? 'bg-teal-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-teal-50 border border-gray-300'
-            }`}
-          >
-            <Video className="h-4 w-4 mr-2" />
-            Videos
-          </button>
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mb-12 flex flex-wrap justify-center gap-3" role="group" aria-label="Filter media">
+          {FILTERS.map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => setFilter(key)}
+              aria-pressed={filter === key}
+              className={`flex cursor-pointer items-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold transition-colors duration-200 ${
+                filter === key
+                  ? 'bg-brand-800 text-white'
+                  : 'border border-brand-200 bg-white text-gray-700 hover:bg-brand-50'
+              }`}
+            >
+              {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
+              {label}
+            </button>
+          ))}
         </div>
 
         {filteredMedia.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              {filter === 'ALL'
-                ? 'No media items available at this time.'
-                : `No ${filter.toLowerCase()}s available at this time.`}
-            </p>
-          </div>
+          <p className="py-12 text-center text-gray-500">
+            {filter === 'ALL'
+              ? 'No media items available at this time.'
+              : `No ${filter.toLowerCase()}s available at this time.`}
+          </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredMedia.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleMediaClick(item)}
-                className="relative group overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl shadow-md transition-shadow duration-300 hover:shadow-xl"
               >
                 <ResponsiveImage
                   src={item.thumbnail_url || item.url}
                   alt={item.title || 'Media item'}
                   aspectRatio="square"
-                  className="group-hover:scale-110 transition-transform duration-300"
+                  className="transition-transform duration-300 group-hover:scale-105"
                 />
 
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
-                  {item.type === 'VIDEO' && (
-                    <div className="absolute top-3 right-3 bg-black bg-opacity-70 rounded-full p-2">
-                      <Video className="h-5 w-5 text-white" />
-                    </div>
-                  )}
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {item.type === 'PHOTO' ? (
-                      <ImageIcon className="h-12 w-12 text-white" />
-                    ) : (
-                      <Video className="h-12 w-12 text-white" />
-                    )}
+                {item.type === 'VIDEO' && (
+                  <div className="absolute right-3 top-3 rounded-full bg-deep/80 p-2">
+                    <Video className="h-4 w-4 text-white" aria-hidden="true" />
                   </div>
-                </div>
+                )}
 
                 {item.title && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-white text-sm font-medium line-clamp-2">
-                      {item.title}
-                    </p>
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-deep/90 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <p className="line-clamp-2 text-sm font-bold text-white">{item.title}</p>
                   </div>
                 )}
               </button>
@@ -180,62 +153,55 @@ export default function MediaPage() {
 
       {selectedMedia && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-deep/95 p-4"
           onClick={closeModal}
         >
           <button
             onClick={closeModal}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            className="absolute right-4 top-4 cursor-pointer rounded-full p-2 text-white transition-colors duration-200 hover:bg-white/10"
             aria-label="Close"
           >
-            <X className="h-8 w-8" />
+            <X className="h-7 w-7" />
           </button>
 
-          <div className="max-w-7xl max-h-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+          <div className="flex max-h-full max-w-7xl flex-col items-center" onClick={(e) => e.stopPropagation()}>
             {selectedMedia.type === 'PHOTO' ? (
               <img
                 src={selectedMedia.url}
                 alt={selectedMedia.title || 'Media item'}
-                className="max-w-full max-h-[85vh] object-contain rounded-lg"
+                className="max-h-[85vh] max-w-full rounded-2xl object-contain"
               />
             ) : (
               <video
                 src={selectedMedia.url}
                 controls
                 autoPlay
-                className="max-w-full max-h-[85vh] rounded-lg"
+                className="max-h-[85vh] max-w-full rounded-2xl"
               >
                 Your browser does not support the video tag.
               </video>
             )}
 
             {selectedMedia.title && (
-              <div className="mt-4 text-center">
-                <p className="text-white text-lg font-medium">
-                  {selectedMedia.title}
-                </p>
-              </div>
+              <p className="mt-4 text-center text-lg font-bold text-white">{selectedMedia.title}</p>
             )}
           </div>
         </div>
       )}
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Join Our Community
-          </h2>
-          <p className="text-gray-600 mb-6">
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <h2 className="heading-md text-deep">Join our community</h2>
+          <p className="mt-3 text-gray-600">
             Follow us on social media for more updates and behind-the-scenes content.
           </p>
-          <a
-            href="/contact"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            Get in Touch
-          </a>
+          <div className="mt-7">
+            <Link to="/contact" className="btn-secondary">
+              Get in touch
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

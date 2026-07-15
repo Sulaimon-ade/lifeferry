@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
-import { AlertCircle, Loader2, Calendar, MapPin, ExternalLink } from 'lucide-react';
+import PageHeader from '../../components/PageHeader';
+import { AlertCircle, Loader2, Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface ProgramEvent {
@@ -15,6 +16,12 @@ interface ProgramEvent {
   image_url: string;
   status: 'UPCOMING' | 'PAST';
 }
+
+const FILTERS = [
+  { key: 'ALL', label: 'All programs' },
+  { key: 'UPCOMING', label: 'Upcoming' },
+  { key: 'PAST', label: 'Past events' },
+] as const;
 
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<ProgramEvent[]>([]);
@@ -64,8 +71,8 @@ export default function ProgramsPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -74,9 +81,9 @@ export default function ProgramsPage() {
   if (error) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <p className="text-red-800">{error}</p>
           </div>
         </div>
@@ -86,117 +93,92 @@ export default function ProgramsPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-6">
-            Programs & Events
-          </h1>
-          <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto">
-            Join our community programs and events designed to support mental health and well-being.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        kicker="Join Us"
+        title="Programs & events"
+        description="Join our community programs and events designed to support mental health and well-being."
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-wrap gap-3 mb-8 justify-center">
-          <button
-            onClick={() => setFilter('ALL')}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'ALL'
-                ? 'bg-teal-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-teal-50 border border-gray-300'
-            }`}
-          >
-            All Programs
-          </button>
-          <button
-            onClick={() => setFilter('UPCOMING')}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'UPCOMING'
-                ? 'bg-teal-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-teal-50 border border-gray-300'
-            }`}
-          >
-            Upcoming
-          </button>
-          <button
-            onClick={() => setFilter('PAST')}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'PAST'
-                ? 'bg-teal-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-teal-50 border border-gray-300'
-            }`}
-          >
-            Past Events
-          </button>
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div
+          className="mb-12 flex flex-wrap justify-center gap-3"
+          role="group"
+          aria-label="Filter programs"
+        >
+          {FILTERS.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setFilter(key)}
+              aria-pressed={filter === key}
+              className={`cursor-pointer rounded-full px-6 py-2.5 text-sm font-bold transition-colors duration-200 ${
+                filter === key
+                  ? 'bg-brand-800 text-white'
+                  : 'border border-brand-200 bg-white text-gray-700 hover:bg-brand-50'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         {filteredPrograms.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              {filter === 'ALL'
-                ? 'No programs or events available at this time.'
-                : `No ${filter.toLowerCase()} programs or events available.`}
-            </p>
-          </div>
+          <p className="py-12 text-center text-gray-500">
+            {filter === 'ALL'
+              ? 'No programs or events available at this time.'
+              : `No ${filter.toLowerCase()} programs or events available.`}
+          </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filteredPrograms.map((program) => (
               <Link
                 key={program.id}
                 to={`/programs/${program.slug}`}
-                className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl"
               >
-                {program.image_url ? (
+                <div className="relative overflow-hidden">
                   <img
-                    src={program.image_url}
-                    alt={program.title}
-                    className="w-full h-48 object-cover"
+                    src={program.image_url || '/images/wellness-beach.jpg'}
+                    alt=""
+                    className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
                   />
-                ) : (
-                  <div className="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
-                    <Calendar className="h-16 w-16 text-white opacity-50" />
-                  </div>
-                )}
+                  <span
+                    className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-wide ${
+                      program.status === 'UPCOMING'
+                        ? 'bg-accent-500 text-white'
+                        : 'bg-white/90 text-gray-600'
+                    }`}
+                  >
+                    {program.status === 'UPCOMING' ? 'Upcoming' : 'Past'}
+                  </span>
+                </div>
 
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span
-                      className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                        program.status === 'UPCOMING'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}
-                    >
-                      {program.status}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-teal-600 transition-colors">
+                <div className="flex flex-1 flex-col p-7">
+                  <h3 className="font-display text-xl font-semibold leading-snug text-deep transition-colors duration-200 group-hover:text-brand-600">
                     {program.title}
                   </h3>
 
-                  <div className="space-y-2 mb-3">
-                    <div className="flex items-start text-sm text-gray-600">
-                      <Calendar className="h-4 w-4 mr-2 text-teal-600 mt-0.5 flex-shrink-0" />
-                      <span>{formatDate(program.event_datetime)}</span>
-                    </div>
+                  <div className="mt-3 space-y-1.5">
+                    <p className="flex items-start gap-2 text-sm font-semibold text-gray-600">
+                      <Calendar className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600" aria-hidden="true" />
+                      <time dateTime={program.event_datetime}>{formatDate(program.event_datetime)}</time>
+                    </p>
                     {program.location && (
-                      <div className="flex items-start text-sm text-gray-600">
-                        <MapPin className="h-4 w-4 mr-2 text-teal-600 mt-0.5 flex-shrink-0" />
-                        <span>{program.location}</span>
-                      </div>
+                      <p className="flex items-start gap-2 text-sm font-semibold text-gray-600">
+                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600" aria-hidden="true" />
+                        {program.location}
+                      </p>
                     )}
                   </div>
 
-                  <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                  <p className="mt-3 line-clamp-2 flex-1 text-[15px] leading-relaxed text-gray-600">
                     {program.description}
                   </p>
 
-                  <div className="flex items-center text-teal-600 font-medium">
-                    <span>View Details</span>
-                    <ExternalLink className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                  <span className="mt-5 inline-flex items-center gap-2 font-bold text-brand-700">
+                    View details
+                    <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  </span>
                 </div>
               </Link>
             ))}
@@ -204,22 +186,19 @@ export default function ProgramsPage() {
         )}
       </div>
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Stay Updated
-          </h2>
-          <p className="text-gray-600 mb-6">
+      <section className="bg-sand">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
+          <h2 className="heading-md text-deep">Stay updated</h2>
+          <p className="mt-3 text-gray-600">
             Don't miss out on our upcoming programs and events. Subscribe to our newsletter.
           </p>
-          <a
-            href="/contact"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            Get in Touch
-          </a>
+          <div className="mt-7">
+            <Link to="/contact" className="btn-secondary">
+              Get in touch
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }

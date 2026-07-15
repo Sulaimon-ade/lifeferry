@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
+import PageHeader from '../../components/PageHeader';
 import { AlertCircle, Loader2, ArrowRight, Clock, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +14,16 @@ interface Service {
   price: string;
   order_num: number;
 }
+
+/** Curated local photography — the services table has no image field. */
+const serviceImages = [
+  '/images/mindfulness-sunrise.jpg',
+  '/images/wellness-beach.jpg',
+  '/images/women-portrait.jpg',
+  '/images/support-circle.jpg',
+  '/images/group-laughter.jpg',
+  '/images/hero-community.jpg',
+];
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
@@ -44,8 +55,8 @@ export default function ServicesPage() {
   if (loading) {
     return (
       <PublicLayout>
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
         </div>
       </PublicLayout>
     );
@@ -54,9 +65,9 @@ export default function ServicesPage() {
   if (error) {
     return (
       <PublicLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
             <p className="text-red-800">{error}</p>
           </div>
         </div>
@@ -66,57 +77,60 @@ export default function ServicesPage() {
 
   return (
     <PublicLayout>
-      <div className="bg-gradient-to-b from-teal-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-6">
-            Our Services
-          </h1>
-          <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto">
-            Comprehensive mental health services tailored to support your well-being.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        kicker="What We Offer"
+        title="Our services"
+        description="Comprehensive mental health services tailored to support your well-being."
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         {services.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500">No services available at this time.</p>
-          </div>
+          <p className="py-12 text-center text-gray-500">No services available at this time.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service) => (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {services.map((service, index) => (
               <Link
                 key={service.id}
                 to={`/services/${service.slug}`}
-                className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl"
               >
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">
+                <div className="overflow-hidden">
+                  <img
+                    src={serviceImages[index % serviceImages.length]}
+                    alt=""
+                    className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-7">
+                  <h3 className="font-display text-xl font-semibold leading-snug text-deep transition-colors duration-200 group-hover:text-brand-600">
                     {service.title}
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">
+                  <p className="mt-3 line-clamp-3 flex-1 text-[15px] leading-relaxed text-gray-600">
                     {service.description}
                   </p>
 
-                  <div className="space-y-2 mb-4">
-                    {service.duration && (
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Clock className="h-4 w-4 mr-2 text-teal-600" />
-                        <span>{service.duration}</span>
-                      </div>
-                    )}
-                    {service.price && (
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Users className="h-4 w-4 mr-2 text-teal-600" />
-                        <span>{service.price}</span>
-                      </div>
-                    )}
-                  </div>
+                  {(service.duration || service.price) && (
+                    <div className="mt-4 space-y-1.5">
+                      {service.duration && (
+                        <p className="flex items-center gap-2 text-sm font-semibold text-gray-500">
+                          <Clock className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                          {service.duration}
+                        </p>
+                      )}
+                      {service.price && (
+                        <p className="flex items-center gap-2 text-sm font-semibold text-gray-500">
+                          <Users className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                          {service.price}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
-                  <div className="flex items-center text-teal-600 font-medium group-hover:gap-2 transition-all">
-                    <span>Learn More</span>
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                  <span className="mt-5 inline-flex items-center gap-2 font-bold text-brand-700">
+                    Learn more
+                    <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  </span>
                 </div>
               </Link>
             ))}
@@ -124,22 +138,26 @@ export default function ServicesPage() {
         )}
       </div>
 
-      <div className="bg-teal-50 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Ready to Get Started?
-          </h2>
-          <p className="text-gray-600 mb-6">
+      <section className="relative overflow-hidden">
+        <img
+          src="/images/support-circle.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-deep/80" />
+        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
+          <h2 className="heading-lg text-white">Ready to get started?</h2>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100">
             Have questions about our services? We're here to help.
           </p>
-          <a
-            href="/contact"
-            className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium"
-          >
-            Contact Us
-          </a>
+          <div className="mt-9">
+            <Link to="/contact" className="btn-primary">
+              Contact us
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </PublicLayout>
   );
 }
