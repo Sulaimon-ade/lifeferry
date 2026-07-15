@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import PublicLayout from '../../components/layouts/PublicLayout';
-import { AlertCircle, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertCircle, Loader2, ChevronDown } from 'lucide-react';
 
 interface FAQItem {
   id: string;
@@ -101,35 +101,36 @@ export default function FAQPage() {
                   {category}
                 </h2>
                 <div className="space-y-4">
-                  {items.map((item) => (
-                    <div
-                      key={item.id}
-                      className="bg-white rounded-lg shadow-md overflow-hidden"
-                    >
-                      <button
-                        onClick={() => toggleItem(item.id)}
-                        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  {items.map((item) => {
+                    const isOpen = openItemId === item.id;
+                    return (
+                      <div
+                        key={item.id}
+                        className="bg-white rounded-lg shadow-md overflow-hidden"
                       >
-                        <span className="text-lg font-semibold text-gray-900 pr-4">
-                          {item.question}
-                        </span>
-                        {openItemId === item.id ? (
-                          <ChevronUp className="h-5 w-5 text-teal-600 flex-shrink-0" />
-                        ) : (
-                          <ChevronDown className="h-5 w-5 text-teal-600 flex-shrink-0" />
-                        )}
-                      </button>
-                      {openItemId === item.id && (
-                        <div className="px-6 pb-4">
-                          <div className="pt-2 border-t border-gray-200">
-                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                              {item.answer}
-                            </p>
+                        <button
+                          onClick={() => toggleItem(item.id)}
+                          className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                        >
+                          <span className="text-lg font-semibold text-gray-900 pr-4">
+                            {item.question}
+                          </span>
+                          <ChevronDown
+                            className={`h-5 w-5 text-teal-600 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+                          />
+                        </button>
+                        <div className={`faq-body ${isOpen ? 'open' : ''}`}>
+                          <div>
+                            <div className="px-6 pb-4 pt-2 border-t border-gray-200">
+                              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                                {item.answer}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      )}
-                    </div>
-                  ))}
+                      </div>
+                    );
+                  })}
                 </div>
               </section>
             ))}

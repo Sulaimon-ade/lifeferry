@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import AdminLayout from '../../components/layouts/AdminLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import RichTextEditor from '../../components/RichTextEditor';
 import {
   Plus,
   Edit2,
@@ -200,6 +201,12 @@ export default function AdminBlog() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const plainContent = formData.content.replace(/<[^>]*>/g, '').trim();
+    if (!plainContent) {
+      showNotification('error', 'Post content cannot be empty');
+      return;
+    }
 
     const dataToSave = {
       ...formData,
@@ -523,13 +530,10 @@ export default function AdminBlog() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
-                <textarea
-                  required
-                  rows={12}
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent font-mono text-sm"
-                  placeholder="Enter content in Markdown or HTML format..."
+                <RichTextEditor
+                  key={editingPost?.id ?? 'new'}
+                  content={formData.content}
+                  onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
                 />
               </div>
 

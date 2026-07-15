@@ -67,14 +67,13 @@ export default function PartnerPage() {
 
       if (error) throw error;
 
+      // Fire notification email — non-blocking
+      supabase.functions.invoke('send-notification', {
+        body: { type: 'volunteer', data: formData },
+      }).catch(console.error);
+
       setFormSuccess(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        interest_area: '',
-        message: '',
-      });
+      setFormData({ name: '', email: '', phone: '', interest_area: '', message: '' });
     } catch (err) {
       console.error('Error submitting volunteer application:', err);
       setFormError('Failed to submit application. Please try again.');

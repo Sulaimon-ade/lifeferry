@@ -109,21 +109,18 @@ export default function HeroCarousel() {
 
       <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col justify-center h-full max-w-2xl">
-          <div
-            key={slide.id}
-            className="animate-fadeIn"
-          >
-            <p className="text-teal-300 text-lg font-medium mb-3 italic">
+          <div key={slide.id}>
+            <p className="animate-fadeIn text-teal-300 text-lg font-medium mb-3 italic">
               {slide.subtitle}
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="animate-fadeIn-d1 text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               {slide.title}
             </h1>
-            <p className="text-xl text-gray-200 mb-8 leading-relaxed">
+            <p className="animate-fadeIn-d2 text-xl text-gray-200 mb-8 leading-relaxed">
               {slide.description}
             </p>
 
-            <div className="flex gap-2 sm:gap-4">
+            <div className="animate-fadeIn-d3 flex gap-2 sm:gap-4">
               <Link
                 to={slide.primaryCTA.link}
                 className="px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-teal-600 text-white rounded-lg text-sm sm:text-base font-semibold hover:bg-teal-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
