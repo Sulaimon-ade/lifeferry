@@ -93,7 +93,7 @@ export default function AdminVolunteers() {
     setShowModal(true);
   };
 
-  const handleUpdateStatus = async (appId: string, newStatus: string) => {
+  const handleUpdateStatus = async (appId: string, newStatus: VolunteerApplication['status']) => {
     try {
       const { error } = await supabase
         .from('volunteer_applications')
@@ -104,7 +104,7 @@ export default function AdminVolunteers() {
       showNotification('success', 'Status updated successfully');
       loadApplications();
       if (selectedApp?.id === appId) {
-        setSelectedApp({ ...selectedApp, status: newStatus as any });
+        setSelectedApp({ ...selectedApp, status: newStatus });
       }
     } catch (error) {
       console.error('Failed to update status:', error);
@@ -232,7 +232,7 @@ export default function AdminVolunteers() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <select
                           value={app.status}
-                          onChange={(e) => handleUpdateStatus(app.id, e.target.value)}
+                          onChange={(e) => handleUpdateStatus(app.id, e.target.value as VolunteerApplication['status'])}
                           className={`px-2.5 py-0.5 rounded-full text-xs font-medium border-0 focus:ring-2 focus:ring-teal-500 ${getStatusColor(
                             app.status
                           )}`}
@@ -282,7 +282,7 @@ export default function AdminVolunteers() {
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Status</h3>
                 <select
                   value={selectedApp.status}
-                  onChange={(e) => handleUpdateStatus(selectedApp.id, e.target.value)}
+                  onChange={(e) => handleUpdateStatus(selectedApp.id, e.target.value as VolunteerApplication['status'])}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium focus:ring-2 focus:ring-teal-500 ${getStatusColor(
                     selectedApp.status
                   )}`}

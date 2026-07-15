@@ -7,7 +7,7 @@ A comprehensive NGO website with admin CMS for the Lifeferry Mental Health Initi
 This is a production-ready mental health NGO website featuring:
 - **Public Website**: Trust-building homepage, services, programs/events, resources, blog, media gallery, and contact
 - **Admin CMS**: Complete content management system for non-technical staff
-- **Role-Based Access Control**: Three user roles (SUPER_ADMIN, ADMIN, EDITOR) with granular permissions
+- **Role-Based Access Control**: Two roles (`admin`, `user`); only `admin` can access the admin panel
 - **Responsive Design**: Mobile-first, accessible, and SEO-friendly
 
 ## Tech Stack
@@ -50,9 +50,11 @@ This is a production-ready mental health NGO website featuring:
 ### Admin Panel
 
 #### Roles & Permissions
-- **SUPER_ADMIN**: Full access including user management and settings
-- **ADMIN**: Content management, cannot manage users or settings
-- **EDITOR**: Blog, resources, media, events only
+- **admin**: Full access to the admin panel and all content management.
+- **user**: No admin access (default for any new account).
+
+Admin accounts are created from the Supabase dashboard (Authentication → Users),
+then their `profiles.role` is set to `admin`. The app has no public sign-up.
 
 #### Admin Routes
 - `/admin` - Login page
@@ -70,8 +72,8 @@ This is a production-ready mental health NGO website featuring:
 - `/admin/volunteers` - Manage volunteer applications
 - `/admin/faq` - Manage FAQ items
 - `/admin/legal` - Edit legal pages
-- `/admin/settings` - Site-wide settings (SUPER_ADMIN only)
-- `/admin/users` - User management (SUPER_ADMIN only)
+- `/admin/settings` - Site-wide settings (admin only)
+- `/admin/users` - User management (admin only)
 
 #### CMS Features
 - Rich text editing for content
