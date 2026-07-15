@@ -1,3 +1,6 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/fraunces';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,6 +11,7 @@
   }
 
   body {
+    @apply font-sans text-gray-800 bg-white;
     font-feature-settings: "kern", "liga", "clig", "calt";
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -21,45 +25,60 @@
   p, li {
     text-wrap: pretty;
   }
+
+  :focus-visible {
+    outline: 3px solid theme('colors.accent.500');
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
+
 @layer components {
-  /* Soft premium gradient background (Face-of-Congeniality vibe) */
-  .section-soft-gradient {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    background: linear-gradient(120deg, #f6f3ff 0%, #f3f8ff 45%, #eef9ff 100%);
+  /* Small uppercase section kicker */
+  .kicker {
+    @apply block text-xs font-bold tracking-[0.2em] uppercase text-accent-600;
   }
 
-  .section-soft-gradient::before,
-  .section-soft-gradient::after {
-    content: "";
-    position: absolute;
-    inset: -30%;
-    z-index: -1;
-    filter: blur(60px);
-    opacity: 0.9;
+  .kicker-light {
+    @apply block text-xs font-bold tracking-[0.2em] uppercase text-accent-300;
   }
 
-  /* Purple glow blob */
-  .section-soft-gradient::before {
-    background: radial-gradient(circle at 25% 25%, rgba(168, 85, 247, 0.28) 0%, transparent 55%);
+  /* Display headings */
+  .heading-xl {
+    @apply font-display text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05];
   }
 
-  /* Blue/teal glow blobs */
-  .section-soft-gradient::after {
-    background:
-      radial-gradient(circle at 75% 35%, rgba(59, 130, 246, 0.22) 0%, transparent 60%),
-      radial-gradient(circle at 70% 80%, rgba(45, 212, 191, 0.18) 0%, transparent 55%);
+  .heading-lg {
+    @apply font-display text-3xl sm:text-4xl font-semibold tracking-tight leading-tight;
   }
 
-  /* Optional: a nice “glass card” style you can reuse */
-  .glass-card {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  .heading-md {
+    @apply font-display text-2xl sm:text-3xl font-semibold tracking-tight leading-tight;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent-500 px-7 py-3.5 text-base font-bold text-white transition-colors duration-200 hover:bg-accent-600 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-800 px-7 py-3.5 text-base font-bold text-white transition-colors duration-200 hover:bg-brand-700 cursor-pointer;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-current px-7 py-3.5 text-base font-bold transition-colors duration-200 cursor-pointer;
   }
 }
 
@@ -182,7 +201,6 @@
 }
 
 /* ─── FAQ smooth accordion ──────────────────────────────────── */
-/* FAQ smooth accordion */
 .faq-body {
   display: grid;
   grid-template-rows: 0fr;
