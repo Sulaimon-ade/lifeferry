@@ -16,7 +16,6 @@ import {
   EyeOff,
   Calendar,
   MapPin,
-  Link as LinkIcon,
 } from 'lucide-react';
 
 interface ProgramEvent {

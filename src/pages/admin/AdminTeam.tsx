@@ -126,7 +126,7 @@ export default function AdminTeam() {
         category: member.category,
         bio: member.bio,
         photo_url: member.photo_url,
-        socials_json: member.socials_json || { linkedin: '', twitter: '', email: '' },
+        socials_json: { linkedin: '', twitter: '', email: '', ...member.socials_json },
         order_num: member.order_num,
         is_active: member.is_active,
       });

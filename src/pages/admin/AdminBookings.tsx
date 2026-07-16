@@ -115,7 +115,7 @@ export default function AdminBookings() {
     setSelectedBooking(null);
   };
 
-  const handleUpdateStatus = async (bookingId: string, newStatus: string) => {
+  const handleUpdateStatus = async (bookingId: string, newStatus: BookingRequest['status']) => {
     try {
       const { error } = await supabase
         .from('booking_requests')
@@ -126,7 +126,7 @@ export default function AdminBookings() {
       showNotification('success', 'Status updated successfully');
       loadData();
       if (selectedBooking?.id === bookingId) {
-        setSelectedBooking({ ...selectedBooking, status: newStatus as any });
+        setSelectedBooking({ ...selectedBooking, status: newStatus });
       }
     } catch (error) {
       console.error('Failed to update status:', error);
@@ -268,7 +268,7 @@ export default function AdminBookings() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <select
                           value={booking.status}
-                          onChange={(e) => handleUpdateStatus(booking.id, e.target.value)}
+                          onChange={(e) => handleUpdateStatus(booking.id, e.target.value as BookingRequest['status'])}
                           className={`px-2.5 py-0.5 rounded-full text-xs font-medium border-0 focus:ring-2 focus:ring-teal-500 ${getStatusColor(
                             booking.status
                           )}`}
@@ -318,7 +318,7 @@ export default function AdminBookings() {
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Status</h3>
                 <select
                   value={selectedBooking.status}
-                  onChange={(e) => handleUpdateStatus(selectedBooking.id, e.target.value)}
+                  onChange={(e) => handleUpdateStatus(selectedBooking.id, e.target.value as BookingRequest['status'])}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium focus:ring-2 focus:ring-teal-500 ${getStatusColor(
                     selectedBooking.status
                   )}`}

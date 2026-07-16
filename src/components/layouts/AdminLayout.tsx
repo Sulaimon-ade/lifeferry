@@ -10,14 +10,12 @@ import {
   BookOpen,
   Image,
   Mail,
-  MessageSquare,
   HelpCircle,
   Scale,
   Settings,
   UserCog,
   LogOut,
   Menu,
-  X,
   Heart,
   CalendarCheck,
   UserPlus,
@@ -30,7 +28,7 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
