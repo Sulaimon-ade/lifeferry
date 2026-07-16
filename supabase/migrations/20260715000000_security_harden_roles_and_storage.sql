@@ -56,11 +56,18 @@ BEGIN
   IF NEW.role IS NOT DISTINCT FROM OLD.role THEN
     RETURN NEW;
   END IF;
-  -- Only an existing admin may change any profile's role.
+  -- Trusted server-side contexts (dashboard SQL editor, migrations,
+  -- service_role) carry no end-user JWT, so auth.uid() is NULL. RLS already
+  -- blocks anon writes to profiles, so a NULL uid here means a trusted
+  -- backend operation — allow it to manage roles (e.g. provisioning admins).
+  IF auth.uid() IS NULL THEN
+    RETURN NEW;
+  END IF;
+  -- An authenticated admin may change any profile's role.
   IF is_admin() THEN
     RETURN NEW;
   END IF;
-  -- Otherwise silently keep the old role.
+  -- Otherwise silently keep the old role (blocks user self-promotion).
   NEW.role := OLD.role;
   RETURN NEW;
 END;
