@@ -69,7 +69,7 @@ function App() {
           <Route
             path="/admin/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <AdminDashboard />
               </ProtectedRoute>
             }
@@ -101,7 +101,7 @@ function App() {
           <Route
             path="/admin/programs"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <AdminPrograms />
               </ProtectedRoute>
             }
@@ -109,7 +109,7 @@ function App() {
           <Route
             path="/admin/resources"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <AdminResources />
               </ProtectedRoute>
             }
@@ -117,7 +117,7 @@ function App() {
           <Route
             path="/admin/blog"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <AdminBlog />
               </ProtectedRoute>
             }
@@ -125,7 +125,7 @@ function App() {
           <Route
             path="/admin/media"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <AdminMedia />
               </ProtectedRoute>
             }
