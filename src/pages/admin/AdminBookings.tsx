@@ -17,6 +17,7 @@ import {
 interface BookingRequest {
   id: string;
   service_id: string | null;
+  service_type: string;
   name: string;
   email: string;
   phone: string;
@@ -259,7 +260,7 @@ export default function AdminBookings() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
-                          {getServiceTitle(booking.service_id)}
+                          {booking.service_type || getServiceTitle(booking.service_id)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -331,8 +332,10 @@ export default function AdminBookings() {
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Service Requested</h3>
-                <p className="text-gray-900">{getServiceTitle(selectedBooking.service_id)}</p>
+                <h3 className="text-sm font-medium text-gray-500 mb-2">Support Requested</h3>
+                <p className="text-gray-900">
+                  {selectedBooking.service_type || getServiceTitle(selectedBooking.service_id)}
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -367,11 +370,13 @@ export default function AdminBookings() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Phone</h3>
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">WhatsApp</h3>
                   <div className="flex items-center space-x-2 text-gray-900">
                     <Phone className="h-4 w-4 text-gray-400" />
                     <a
-                      href={`tel:${selectedBooking.phone}`}
+                      href={`https://wa.me/${selectedBooking.phone.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-teal-600 hover:underline"
                     >
                       {selectedBooking.phone}

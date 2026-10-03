@@ -20,6 +20,11 @@ function esc(value: unknown): string {
     .replace(/"/g, '&quot;');
 }
 
+// wa.me wants digits only — no +, spaces, dashes or parentheses.
+function waNumber(value: unknown): string {
+  return String(value ?? '').replace(/\D/g, '');
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -79,8 +84,8 @@ serve(async (req) => {
           <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
             <tr><td style="padding:8px 0;font-weight:600;width:170px;">Name</td><td style="padding:8px 0;">${esc(data.name)}</td></tr>
             <tr><td style="padding:8px 0;font-weight:600;">Email</td><td style="padding:8px 0;"><a href="mailto:${esc(data.email)}">${esc(data.email)}</a></td></tr>
-            <tr><td style="padding:8px 0;font-weight:600;">Phone</td><td style="padding:8px 0;"><a href="tel:${esc(data.phone)}">${esc(data.phone)}</a></td></tr>
-            <tr><td style="padding:8px 0;font-weight:600;">Service</td><td style="padding:8px 0;">${esc(data.service_title || 'Not specified')}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;">WhatsApp</td><td style="padding:8px 0;"><a href="https://wa.me/${waNumber(data.phone)}">${esc(data.phone)}</a></td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;">Support needed</td><td style="padding:8px 0;"><strong>${esc(data.service_type || 'Not specified')}</strong></td></tr>
             <tr><td style="padding:8px 0;font-weight:600;">Preferred time</td><td style="padding:8px 0;"><strong>${esc(data.preferred_datetime)}</strong></td></tr>
           </table>
           ${data.message ? `

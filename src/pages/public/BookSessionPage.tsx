@@ -5,16 +5,25 @@ import PublicLayout from '../../components/layouts/PublicLayout';
 import PageHeader from '../../components/PageHeader';
 import { AlertCircle, Loader2, CheckCircle, CalendarCheck, ShieldCheck, Clock } from 'lucide-react';
 
-interface Service {
-  id: string;
-  title: string;
-  slug: string;
-}
-
 const inputClass =
   'w-full rounded-xl border border-brand-200 bg-white px-4 py-3 text-base text-gray-800 placeholder:text-gray-400';
 
 const labelClass = 'mb-1.5 block text-sm font-bold text-deep';
+
+// What kind of support someone is asking for. Deliberately broader than the
+// three services on /services — people book by need, not by service page.
+const serviceTypes = [
+  'Marriage & family life counseling',
+  'Addiction therapy',
+  'General mental health therapy',
+  'Personal growth & coaching',
+  'Anxiety & depression support',
+  'Grief & bereavement support',
+  'Trauma counseling',
+  'Youth & adolescent counseling',
+  'Workplace stress & burnout',
+  'Something else / not sure yet',
+];
 
 const assurances = [
   {
@@ -36,7 +45,6 @@ const assurances = [
 
 export default function BookSessionPage() {
   const [searchParams] = useSearchParams();
-  const [services, setServices] = useState<Service[]>([]);
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -45,38 +53,37 @@ export default function BookSessionPage() {
     email: '',
     phone: '',
     service_id: '',
+    service_type: '',
     preferred_datetime: '',
     message: '',
     disclaimer_accepted: false,
   });
 
+  // Someone arriving from a service page (/book?service=slug) carries that
+  // service through as provenance. It is not shown — they pick what they want
+  // support with below — but it tells us which page sent them.
   useEffect(() => {
-    fetchServices();
-  }, []);
+    const slug = searchParams.get('service');
+    if (!slug) return;
 
-  const fetchServices = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('services')
-        .select('id, title, slug')
-        .eq('is_active', true)
-        .order('order_num');
+    const linkService = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('services')
+          .select('id')
+          .eq('slug', slug)
+          .eq('is_active', true)
+          .maybeSingle();
 
-      if (error) throw error;
-      setServices(data || []);
-
-      // Preselect the service when arriving from a service page (/book?service=slug)
-      const slug = searchParams.get('service');
-      if (slug) {
-        const match = (data || []).find((s) => s.slug === slug);
-        if (match) {
-          setFormData((prev) => ({ ...prev, service_id: match.id }));
-        }
+        if (error) throw error;
+        if (data) setFormData((prev) => ({ ...prev, service_id: data.id }));
+      } catch (err) {
+        console.error('Error resolving service from URL:', err);
       }
-    } catch (err) {
-      console.error('Error fetching services:', err);
-    }
-  };
+    };
+
+    linkService();
+  }, [searchParams]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -99,12 +106,9 @@ export default function BookSessionPage() {
 
       if (error) throw error;
 
-      const serviceTitle =
-        services.find((s) => s.id === formData.service_id)?.title || 'Not specified';
-
       // Fire notification email — non-blocking
       supabase.functions.invoke('send-notification', {
-        body: { type: 'booking', data: { ...payload, service_title: serviceTitle } },
+        body: { type: 'booking', data: payload },
       }).catch(console.error);
 
       setFormSuccess(true);
@@ -113,6 +117,7 @@ export default function BookSessionPage() {
         email: '',
         phone: '',
         service_id: '',
+        service_type: '',
         preferred_datetime: '',
         message: '',
         disclaimer_accepted: false,
@@ -209,7 +214,7 @@ export default function BookSessionPage() {
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label htmlFor="phone" className={labelClass}>Phone number *</label>
+                  <label htmlFor="phone" className={labelClass}>WhatsApp number *</label>
                   <input
                     type="tel"
                     id="phone"
@@ -218,23 +223,30 @@ export default function BookSessionPage() {
                     onChange={handleInputChange}
                     required
                     autoComplete="tel"
+                    placeholder="e.g. +234 801 234 5678"
                     className={inputClass}
                   />
+                  <p className="mt-1.5 text-sm text-gray-600">
+                    Include your country code so we can reach you on WhatsApp.
+                  </p>
                 </div>
 
                 <div>
-                  <label htmlFor="service_id" className={labelClass}>Which service?</label>
+                  <label htmlFor="service_type" className={labelClass}>
+                    What would you like support with? *
+                  </label>
                   <select
-                    id="service_id"
-                    name="service_id"
-                    value={formData.service_id}
+                    id="service_type"
+                    name="service_type"
+                    value={formData.service_type}
                     onChange={handleInputChange}
+                    required
                     className={inputClass}
                   >
-                    <option value="">I'm not sure yet</option>
-                    {services.map((service) => (
-                      <option key={service.id} value={service.id}>
-                        {service.title}
+                    <option value="">Please choose…</option>
+                    {serviceTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
                       </option>
                     ))}
                   </select>
