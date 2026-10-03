@@ -458,7 +458,7 @@ export default function HomePage() {
             team is here to support you.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link to="/services" className="btn-primary">
+            <Link to="/book" className="btn-primary">
               Book a session
             </Link>
             <Link to="/contact" className="btn-outline text-white hover:bg-white/15">

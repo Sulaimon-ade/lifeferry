@@ -151,8 +151,11 @@ export default function ServicesPage() {
           <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100">
             Have questions about our services? We're here to help.
           </p>
-          <div className="mt-9">
-            <Link to="/contact" className="btn-primary">
+          <div className="mt-9 flex flex-wrap justify-center gap-4">
+            <Link to="/book" className="btn-primary">
+              Book a session
+            </Link>
+            <Link to="/contact" className="btn-outline text-gray-700 hover:bg-gray-100">
               Contact us
             </Link>
           </div>

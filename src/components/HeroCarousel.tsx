@@ -25,7 +25,7 @@ const slides: Slide[] = [
     title: 'Individual Therapy & Counseling',
     subtitle: "Your partner through life's cruise",
     description: 'Professional one-on-one support tailored to your unique mental health journey',
-    primaryCTA: { text: 'Book a Session', link: '/services' },
+    primaryCTA: { text: 'Book a Session', link: '/book' },
     secondaryCTA: { text: 'Learn More', link: '/services' },
   },
   {
