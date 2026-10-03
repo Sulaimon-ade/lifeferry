@@ -20,7 +20,6 @@ export default function ServiceDetailPage() {
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -45,10 +44,6 @@ export default function ServiceDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleBookingClick = () => {
-    setShowBookingModal(true);
   };
 
   if (loading) {
@@ -144,39 +139,12 @@ export default function ServiceDetailPage() {
           <p className="mx-auto mt-4 max-w-2xl text-brand-100">
             Take the first step toward better mental health. Book a session with us today.
           </p>
-          <button onClick={handleBookingClick} className="btn-primary mt-8">
+          <Link to={`/book?service=${service.slug}`} className="btn-primary mt-8">
             <Calendar className="h-5 w-5" aria-hidden="true" />
             Book now
-          </button>
+          </Link>
         </section>
       </div>
-
-      {showBookingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-deep/70 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-8">
-            <h3 className="heading-md text-deep">Book {service.title}</h3>
-            <p className="mt-4 text-gray-600">
-              To book this service, please contact us directly. Our team will
-              help you schedule an appointment.
-            </p>
-            <div className="mt-7 space-y-3">
-              <Link
-                to="/contact"
-                className="btn-primary w-full"
-                onClick={() => setShowBookingModal(false)}
-              >
-                Go to contact page
-              </Link>
-              <button
-                onClick={() => setShowBookingModal(false)}
-                className="btn-outline w-full text-gray-700 hover:bg-gray-100"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <section className="bg-sand">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">

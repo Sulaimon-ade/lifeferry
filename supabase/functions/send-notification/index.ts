@@ -71,6 +71,31 @@ serve(async (req) => {
           </p>
         </div>
       `;
+    } else if (type === 'booking') {
+      subject = `New Session Booking — ${data.name}`;
+      html = `
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;">
+          <h2 style="color:#0f766e;margin-bottom:16px;">🗓️ New Session Booking</h2>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+            <tr><td style="padding:8px 0;font-weight:600;width:170px;">Name</td><td style="padding:8px 0;">${esc(data.name)}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;">Email</td><td style="padding:8px 0;"><a href="mailto:${esc(data.email)}">${esc(data.email)}</a></td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;">Phone</td><td style="padding:8px 0;"><a href="tel:${esc(data.phone)}">${esc(data.phone)}</a></td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;">Service</td><td style="padding:8px 0;">${esc(data.service_title || 'Not specified')}</td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;">Preferred time</td><td style="padding:8px 0;"><strong>${esc(data.preferred_datetime)}</strong></td></tr>
+          </table>
+          ${data.message ? `
+          <div style="background:#f3f4f6;border-radius:8px;padding:16px;">
+            <p style="margin:0 0 8px;font-weight:600;">Their note:</p>
+            <p style="margin:0;white-space:pre-wrap;">${esc(data.message)}</p>
+          </div>` : ''}
+          <p style="margin-top:20px;padding:12px 16px;background:#ecfdf5;border-left:4px solid #0f766e;border-radius:4px;font-size:14px;color:#374151;">
+            This person is waiting to hear back. Reply to this email to reach them directly.
+          </p>
+          <p style="margin-top:24px;font-size:12px;color:#6b7280;">
+            View in admin: <a href="https://lifeferry.org/admin/bookings">lifeferry.org/admin/bookings</a>
+          </p>
+        </div>
+      `;
     } else if (type === 'volunteer') {
       subject = `New Volunteer Application — ${data.name}`;
       html = `

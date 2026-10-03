@@ -16,6 +16,7 @@ import BlogPostPage from './pages/public/BlogPostPage';
 import PartnerPage from './pages/public/PartnerPage';
 import MediaPage from './pages/public/MediaPage';
 import ContactPage from './pages/public/ContactPage';
+import BookSessionPage from './pages/public/BookSessionPage';
 import FAQPage from './pages/public/FAQPage';
 import PrivacyPage from './pages/public/PrivacyPage';
 import TermsPage from './pages/public/TermsPage';
@@ -58,6 +59,7 @@ function App() {
           <Route path="/partner" element={<PartnerPage />} />
           <Route path="/media" element={<MediaPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/book" element={<BookSessionPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />

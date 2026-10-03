@@ -24,6 +24,7 @@ const navigation: NavItem[] = [
     children: [
       { name: 'About Us', href: '/about' },
       { name: 'Services', href: '/services' },
+      { name: 'Book a Session', href: '/book' },
       { name: 'Our Team', href: '/team' },
       { name: 'Partner With Us', href: '/partner' },
       { name: 'Contact', href: '/contact' },
